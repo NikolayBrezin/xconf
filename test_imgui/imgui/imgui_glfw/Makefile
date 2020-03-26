@@ -14,8 +14,8 @@
 #CXX = g++
 #CXX = clang++
 
-CC=x86_64-kgp-mingw32-gcc.exe
-CXX=x86_64-kgp-mingw32-g++.exe
+TOOLS_CC=gcc
+TOOLS_CXX=g++
 
 EXE = example_glfw_opengl3
 SOURCES = main.cpp
@@ -26,7 +26,7 @@ UNAME_S := $(shell uname -s)
 
 CXXFLAGS = -I../ -I../../
 CXXFLAGS += -g -Wall -Wformat
-LIBS = -lgdi32
+LIBS =-lglfw3
 
 ##---------------------------------------------------------------------
 ## OPENGL LOADER
@@ -55,16 +55,28 @@ CXXFLAGS += -I../libs/gl3w -DIMGUI_IMPL_OPENGL_LOADER_GL3W
 ## BUILD FLAGS PER PLATFORM
 ##---------------------------------------------------------------------
 
-ifeq ($(UNAME_S), Linux) #LINUX
-	ECHO_MESSAGE = "Linux"
-	LIBS += -lGL `pkg-config --static --libs glfw3`
+#TODO (1) доделать `pkg-config --cflags glfw3` добавлением 'правильных' glfw3.pc в BUILD/HOST/lib
 
-	CXXFLAGS += `pkg-config --cflags glfw3`
+# хост система по умолчанию - mingw
+HOST ?= mingw
+
+ifeq ($(UNAME_S), Linux) #LINUX
+	ifeq ($(HOST),mingw)
+		CC=x86_64-kgp-mingw32-$(TOOLS_CC)
+		CXX=x86_64-kgp-mingw32-$(TOOLS_CXX)
+		CXXFLAGS += 
+		LIBS += -lopengl32 -lgdi32
+	else
+		CC=$(TOOLS_CC)
+		CXX=$(TOOLS_CXX)
+		CXXFLAGS += 
+		LIBS += -lGL -ldl -lpthread -lrt
+	endif	
 	CFLAGS = $(CXXFLAGS)
 endif
 
 ifeq ($(UNAME_S), Darwin) #APPLE
-	ECHO_MESSAGE = "Mac OS X"
+#	ECHO_MESSAGE = "build system Mac OS X"
 	LIBS += -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo
 	LIBS += -L/usr/local/lib -L/opt/local/lib
 	#LIBS += -lglfw3
@@ -75,16 +87,18 @@ ifeq ($(UNAME_S), Darwin) #APPLE
 endif
 
 ifeq ($(findstring MINGW,$(UNAME_S)),MINGW)
-	ECHO_MESSAGE = "MinGW"
-	LIBS += -lglfw3 -lgdi32 -lopengl32 -limm32
-
-	CXXFLAGS += `pkg-config --cflags glfw3`
+	CC=x86_64-kgp-mingw32-$(TOOLS_CC).exe
+	CXX=x86_64-kgp-mingw32-$(TOOLS_CXX).exe
+	LIBS +=-lgdi32 -lopengl32 -limm32
+	CXXFLAGS +=
 	CFLAGS = $(CXXFLAGS)
 endif
 
 ##---------------------------------------------------------------------
 ## BUILD RULES
 ##---------------------------------------------------------------------
+
+
 
 %.o:%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
@@ -101,11 +115,15 @@ endif
 %.o:../libs/glad/src/%.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-all: $(EXE)
-	@echo Build complete for $(ECHO_MESSAGE)
+all: build_info $(EXE)
+	@echo Build complete
 
-$(EXE): $(OBJS)
+$(EXE):$(OBJS)
 	$(CXX) -o $@ $^ $(CXXFLAGS) $(LIBS)
 
+build_info:
+	@echo build system ... $(UNAME_S)
+	@echo host system  ... $(HOST)
+
 clean:
-	rm -f $(EXE) $(OBJS)
+	rm -f $(EXE) $(EXE).exe $(OBJS)
