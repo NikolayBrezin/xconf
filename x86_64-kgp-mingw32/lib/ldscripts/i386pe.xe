@@ -4,7 +4,7 @@
    are permitted in any medium without royalty provided the copyright
    notice and this notice are preserved.  */
 OUTPUT_FORMAT(pei-i386)
-SEARCH_DIR("/opt/home/cross/x86_64-kgp-mingw32/x86_64-kgp-mingw32-core2_sse41_x86_64/x86_64-kgp-mingw32-core2_sse41_x86_64/x86_64-kgp-mingw32/lib");
+SEARCH_DIR("/opt/home/cross/x86_64-kgp-mingw32/x86_64-kgp-mingw32-core2_sse4.1/x86_64-kgp-mingw32-core2_sse4.1/x86_64-kgp-mingw32/lib");
 SECTIONS
 {
   /* Make the virtual address and file offset synced if the alignment is

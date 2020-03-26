@@ -38,4 +38,4 @@ dlopen=''
 dlpreopen=''
 
 # Directory that this library needs to be installed in:
-libdir='/opt/home/cross/x86_64-kgp-mingw32/x86_64-kgp-mingw32-core2_sse41_x86_64/x86_64-kgp-mingw32-core2_sse41_x86_64/lib/gcc/x86_64-kgp-mingw32/10.0.1'
+libdir='/opt/home/cross/x86_64-kgp-mingw32/x86_64-kgp-mingw32-core2_sse4.1/x86_64-kgp-mingw32-core2_sse4.1/lib/gcc/x86_64-kgp-mingw32/10.0.1'

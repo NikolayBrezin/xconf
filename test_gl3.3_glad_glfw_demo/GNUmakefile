@@ -1,7 +1,5 @@
 CC=x86_64-kgp-mingw32-gcc.exe
-STRIP=strip.exe
-RM=rm.exe
-
+STRIP=x86_64-kgp-mingw32-strip.exe
 LIBS=-lglfw3 -lopengl32 -lgdi32
 
 all:
@@ -16,4 +14,4 @@ all:
 	$(STRIP) *.exe
 
 clean:
-	$(RM) -f *.exe offscreen.png
+	rm -f *.exe offscreen.png

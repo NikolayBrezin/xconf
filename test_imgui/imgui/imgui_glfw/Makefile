@@ -16,16 +16,36 @@
 
 TOOLS_CC=gcc
 TOOLS_CXX=g++
+TOOLS_STRIP=strip
 
-EXE = example_glfw_opengl3
+APP_NAME=example_glfw_opengl3
+
+
 SOURCES = main.cpp
 SOURCES += ../imgui_impl_glfw.cpp ../imgui_impl_opengl3.cpp
 SOURCES += ../../imgui.cpp ../../imgui_demo.cpp ../../imgui_draw.cpp ../../imgui_widgets.cpp
 OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 UNAME_S := $(shell uname -s)
 
+LTO ?= no
+
 CXXFLAGS = -I../ -I../../
-CXXFLAGS += -g -Wall -Wformat
+CXXFLAGS += -g3 -ggdb -Wall -Wformat -ffunction-sections -fdata-sections
+
+BUILD_DATE_STR="\"$(shell date +%Y%m%d:%H:%M:%S)"\"
+BUILD_DATE=$(shell date +%Y%m%d)
+BUILD_TIME=$(shell date +%H%M%S)
+
+LDFLAGS=-Wl,-gc-sections -Wl,--defsym,__firmware_build_date__=$(BUILD_DATE),--defsym,__firmware_build_time__=$(BUILD_TIME)
+
+#optimisation
+CXXFLAGS+= -pipe -Ofast
+ifeq ($(HOST),mingw)
+	CXXFLAGS+=-flto=8
+else
+	CXXFLAGS+=-fno-lto
+endif
+
 LIBS =-lglfw3
 
 ##---------------------------------------------------------------------
@@ -64,34 +84,32 @@ ifeq ($(UNAME_S), Linux) #LINUX
 	ifeq ($(HOST),mingw)
 		CC=x86_64-kgp-mingw32-$(TOOLS_CC)
 		CXX=x86_64-kgp-mingw32-$(TOOLS_CXX)
+		LD=$(CXX)
+		STRIP=$(TOOLS_STRIP)
 		CXXFLAGS += 
 		LIBS += -lopengl32 -lgdi32
+		BIN=$(APP_NAME)
 	else
 		CC=$(TOOLS_CC)
 		CXX=$(TOOLS_CXX)
+		LD=$(CXX)
+		STRIP=$(TOOLS_STRIP)
 		CXXFLAGS += 
 		LIBS += -lGL -ldl -lpthread -lrt
+		BIN=$(APP_NAME).exe
 	endif	
-	CFLAGS = $(CXXFLAGS)
-endif
-
-ifeq ($(UNAME_S), Darwin) #APPLE
-#	ECHO_MESSAGE = "build system Mac OS X"
-	LIBS += -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo
-	LIBS += -L/usr/local/lib -L/opt/local/lib
-	#LIBS += -lglfw3
-	LIBS += -lglfw
-
-	CXXFLAGS += -I/usr/local/include -I/opt/local/include
 	CFLAGS = $(CXXFLAGS)
 endif
 
 ifeq ($(findstring MINGW,$(UNAME_S)),MINGW)
 	CC=x86_64-kgp-mingw32-$(TOOLS_CC).exe
 	CXX=x86_64-kgp-mingw32-$(TOOLS_CXX).exe
+	STRIP=$(TOOLS_STRIP).exe
+	LD=$(CXX)
 	LIBS +=-lgdi32 -lopengl32 -limm32
 	CXXFLAGS +=
 	CFLAGS = $(CXXFLAGS)
+	BIN=$(APP_NAME).exe
 endif
 
 ##---------------------------------------------------------------------
@@ -115,15 +133,18 @@ endif
 %.o:../libs/glad/src/%.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-all: build_info $(EXE)
+all: build_info $(BIN)
 	@echo Build complete
 
-$(EXE):$(OBJS)
-	$(CXX) -o $@ $^ $(CXXFLAGS) $(LIBS)
+$(BIN):$(OBJS)
+	$(LD) $(LDFLAGS) -o $@ $^ $(CXXFLAGS) $(LIBS)
 
 build_info:
 	@echo build system ... $(UNAME_S)
 	@echo host system  ... $(HOST)
 
 clean:
-	rm -f $(EXE) $(EXE).exe $(OBJS)
+	rm -f $(BIN) $(OBJS)
+
+strip:
+	$(STRIP) $(BIN)

@@ -53,7 +53,7 @@ if [ x$1 != x ] ; then
   prefix=$1
   shift
 else
-  prefix=/opt/home/cross/x86_64-kgp-mingw32/x86_64-kgp-mingw32-core2_sse41_x86_64/x86_64-kgp-mingw32-core2_sse41_x86_64
+  prefix=/opt/home/cross/x86_64-kgp-mingw32/x86_64-kgp-mingw32-core2_sse4.1/x86_64-kgp-mingw32-core2_sse4.1
 fi
 
 # Allow for alternate isysroot in which to find headers

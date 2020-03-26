@@ -7682,9 +7682,10 @@ BFD_JUMP_TABLE macros.
      #define bfd_get_symbol_info(b,p,e) \
             BFD_SEND (b, _bfd_get_symbol_info, (b,p,e))
        const char *(*_bfd_get_symbol_version_string) (bfd *, struct bfd_symbol *,
+                                                      bfd_boolean,
                                                       bfd_boolean *);
-     #define bfd_get_symbol_version_string(b,s,h) \
-            BFD_SEND (b, _bfd_get_symbol_version_string, (b,s,h))
+     #define bfd_get_symbol_version_string(b,s,p,h) \
+            BFD_SEND (b, _bfd_get_symbol_version_string, (b,s,p,h))
        bfd_boolean (*_bfd_is_local_label_name) (bfd *, const char *);
        bfd_boolean (*_bfd_is_target_special_symbol) (bfd *, asymbol *);
        alent *     (*_get_lineno) (bfd *, struct bfd_symbol *);
@@ -12119,10 +12120,10 @@ BFD Index
                                                              (line   56)
 * bfd_fill_in_gnu_debuglink_section:     Opening and Closing.
                                                              (line  427)
-* bfd_find_target:                       bfd_target.         (line  569)
+* bfd_find_target:                       bfd_target.         (line  570)
 * bfd_find_version_for_sym:              Writing the symbol table.
                                                              (line  111)
-* bfd_flavour_name:                      bfd_target.         (line  632)
+* bfd_flavour_name:                      bfd_target.         (line  633)
 * bfd_follow_build_id_debuglink:         Opening and Closing.
                                                              (line  487)
 * bfd_follow_gnu_debugaltlink:           Opening and Closing.
@@ -12173,7 +12174,7 @@ BFD Index
 * bfd_get_size <1>:                      Internal.           (line   24)
 * bfd_get_symtab_upper_bound:            symbol handling functions.
                                                              (line    5)
-* bfd_get_target_info:                   bfd_target.         (line  585)
+* bfd_get_target_info:                   bfd_target.         (line  586)
 * bfd_get_unique_section_name:           section prototypes. (line   65)
 * bfd_hash_allocate:                     Creating and Freeing a Hash Table.
                                                              (line   17)
@@ -12204,7 +12205,7 @@ BFD Index
                                                              (line   39)
 * bfd_is_undefined_symclass:             symbol handling functions.
                                                              (line  125)
-* bfd_iterate_over_targets:              bfd_target.         (line  620)
+* bfd_iterate_over_targets:              bfd_target.         (line  621)
 * bfd_link_check_relocs:                 Writing the symbol table.
                                                              (line  133)
 * bfd_link_split_section:                Writing the symbol table.
@@ -14622,7 +14623,7 @@ BFD Index
 * bfd_set_archive_head:                  Archives.           (line   74)
 * bfd_set_arch_info:                     Architectures.      (line  625)
 * bfd_set_assert_handler:                Error reporting.    (line  162)
-* bfd_set_default_target:                bfd_target.         (line  559)
+* bfd_set_default_target:                bfd_target.         (line  560)
 * bfd_set_error:                         Error reporting.    (line   58)
 * bfd_set_error_handler:                 Error reporting.    (line  128)
 * bfd_set_error_program_name:            Error reporting.    (line  136)
@@ -14642,7 +14643,7 @@ BFD Index
                                                              (line   63)
 * bfd_symbol_info:                       symbol handling functions.
                                                              (line  135)
-* bfd_target_list:                       bfd_target.         (line  611)
+* bfd_target_list:                       bfd_target.         (line  612)
 * bfd_update_compression_header:         Miscellaneous.      (line  354)
 * bfd_write_bigendian_4byte_int:         Internal.           (line   12)
 * bfd_zalloc:                            Opening and Closing.
@@ -14711,38 +14712,38 @@ Node: howto manager136997
 Node: Core Files269616
 Node: Targets271654
 Node: bfd_target273629
-Node: Architectures301005
-Node: Opening and Closing332968
-Node: Internal350895
-Node: File Caching357727
-Node: Linker Functions359645
-Node: Creating a Linker Hash Table361319
-Node: Adding Symbols to the Hash Table363058
-Node: Differing file formats363958
-Node: Adding symbols from an object file365683
-Node: Adding symbols from an archive367833
-Node: Performing the Final Link370179
-Node: Information provided by the linker371420
-Node: Relocating the section contents372574
-Node: Writing the symbol table374326
-Node: Hash Tables381480
-Node: Creating and Freeing a Hash Table382678
-Node: Looking Up or Entering a String383928
-Node: Traversing a Hash Table385181
-Node: Deriving a New Hash Table Type385970
-Node: Define the Derived Structures387036
-Node: Write the Derived Creation Routine388117
-Node: Write Other Derived Routines390742
-Node: BFD back ends392057
-Node: What to Put Where392327
-Node: aout392507
-Node: coff398789
-Node: elf426940
-Node: mmo427341
-Node: File layout428211
-Node: Symbol-table434124
-Node: mmo section mapping437887
-Node: GNU Free Documentation License441541
-Node: BFD Index466605
+Node: Architectures301076
+Node: Opening and Closing333039
+Node: Internal350966
+Node: File Caching357798
+Node: Linker Functions359716
+Node: Creating a Linker Hash Table361390
+Node: Adding Symbols to the Hash Table363129
+Node: Differing file formats364029
+Node: Adding symbols from an object file365754
+Node: Adding symbols from an archive367904
+Node: Performing the Final Link370250
+Node: Information provided by the linker371491
+Node: Relocating the section contents372645
+Node: Writing the symbol table374397
+Node: Hash Tables381551
+Node: Creating and Freeing a Hash Table382749
+Node: Looking Up or Entering a String383999
+Node: Traversing a Hash Table385252
+Node: Deriving a New Hash Table Type386041
+Node: Define the Derived Structures387107
+Node: Write the Derived Creation Routine388188
+Node: Write Other Derived Routines390813
+Node: BFD back ends392128
+Node: What to Put Where392398
+Node: aout392578
+Node: coff398860
+Node: elf427011
+Node: mmo427412
+Node: File layout428282
+Node: Symbol-table434195
+Node: mmo section mapping437958
+Node: GNU Free Documentation License441612
+Node: BFD Index466676
 
 End Tag Table
