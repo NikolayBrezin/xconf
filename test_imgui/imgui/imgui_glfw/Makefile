@@ -40,7 +40,7 @@ LDFLAGS=-Wl,-gc-sections -Wl,--defsym,__firmware_build_date__=$(BUILD_DATE),--de
 
 #optimisation
 CXXFLAGS+= -pipe -Ofast
-ifeq ($(HOST),mingw)
+ifeq ($(LTO),yes)
 	CXXFLAGS+=-flto=8
 else
 	CXXFLAGS+=-fno-lto
