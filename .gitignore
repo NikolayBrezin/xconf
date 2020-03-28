@@ -3,3 +3,4 @@
 /xconf/xconf.vcxproj.filters
 /xconf/xconf.vcxproj.user
 /xconf/imgui.ini
+/xconf/data/out.json
