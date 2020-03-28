@@ -11,3 +11,6 @@
 /xconf/imgui/*.a
 /xconf/json/*.a
 /xconf/*.exe
+/xconf/*.o
+/xconf/xconf
+
