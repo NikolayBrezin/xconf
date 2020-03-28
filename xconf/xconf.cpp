@@ -134,7 +134,7 @@ struct TreeItem
             {
                 draw_control<int>(_value, _min_v, _max_v, "%5d", [](int* value, int v_min, int v_max)
                     {
-                        return ImGui::DragInt("", value, (v_max - v_min) / 100, v_min, v_max);
+                        return ImGui::DragInt("", value, float(v_max - v_min) / 100, v_min, v_max);
                     });
             }
             else if (_type == "float")
@@ -548,7 +548,7 @@ void init_xconf()
         fprintf(stderr, "something wrong happened during init\n");
     }
 
-    std::string file_name = ".\\data\\fadec.json.data";
+    std::string file_name = "./data/fadec.json.data";
     std::ifstream input(file_name);
     if (!input)
         std::cout << "error opening file " << file_name << " for reading \n";
@@ -560,7 +560,7 @@ void init_xconf()
     {
         std::string line;
         std::getline(input, line);
-        auto ret = json_parser_string(&parser, line.c_str(), line.size(), nullptr);
+        auto ret = json_parser_string(&parser, line.c_str(), (uint32_t)line.size(), nullptr);
         if (ret) 
         {
             std::cout << "error parsing line " << counter << ": "  << line << "\n";
@@ -581,7 +581,7 @@ void render_xconf_window()
     ImGui::SameLine();
     if (ImGui::Button("Save"))
     {
-        const char* file_name = ".\\data\\out.json";
+        const char* file_name = "./data/out.json";
         FILE* f = fopen(file_name, "w");
         if (!f)
             std::cout << "error opening file " << file_name << " for writing \n";
@@ -614,7 +614,7 @@ int main(int, char**)
     ImGui_ImplOpenGL3_Init(glsl_version);
 
     //ImFont* font = io.Fonts->AddFontFromFileTTF("courier.ttf", 13);
-    io.Fonts->AddFontFromFileTTF(".\\data\\fonts\\DejaVuLGCSansMono.ttf", 13.0f, NULL, io.Fonts->GetGlyphRangesCyrillic());
+    io.Fonts->AddFontFromFileTTF("./data/fonts/DejaVuLGCSansMono.ttf", 13.0f, NULL, io.Fonts->GetGlyphRangesCyrillic());
     //init_style(true, 0.5f);
     init_style2();
 
