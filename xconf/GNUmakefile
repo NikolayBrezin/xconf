@@ -154,7 +154,7 @@ APP_OBJ = $(addsuffix .o, $(basename $(APP_SRCS)))
 
 $(BIN):$(APP_LIBS) $(APP_OBJ)
 	$(LD) $(LDFLAGS) -o $@ $(APP_OBJ) $(CXXFLAGS) $(APP_LIBS) $(LIBS)
-	$(STRIP) $@
+#	$(STRIP) $@
 #--------------------------------------------------------------
 
 
