@@ -550,6 +550,7 @@ void init_xconf()
     }
 
     std::string file_name = ".\\data\\fadec.json.data";
+    std::cout << "load JSON config from file " << file_name << "\n";
     std::ifstream input(file_name);
     if (!input)
         std::cout << "error opening file " << file_name << " for reading \n";
