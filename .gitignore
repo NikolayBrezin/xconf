@@ -13,4 +13,5 @@
 /xconf/*.exe
 /xconf/*.o
 /xconf/xconf
+/xconf/.dep
 
