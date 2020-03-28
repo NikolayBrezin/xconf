@@ -40,19 +40,8 @@ LDFLAGS=-Wl,-gc-sections -Wl,--defsym,__firmware_build_date__=$(BUILD_DATE),--de
 
 #optimisation
 CXXFLAGS+= -pipe -Ofast
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
 ifeq ($(LTO),yes)
-=======
-ifeq ($(HOST),mingw)
->>>>>>> Stashed changes
-=======
-ifeq ($(HOST),mingw)
->>>>>>> Stashed changes
-=======
-ifeq ($(HOST),mingw)
->>>>>>> Stashed changes
 	CXXFLAGS+=-flto=8
 else
 	CXXFLAGS+=-fno-lto
