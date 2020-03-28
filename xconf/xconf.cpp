@@ -163,7 +163,7 @@ struct TreeItem
                 if (!_name.empty())
                     fprintf(f, "%s\"name\": \"%s\",\n", tabs_.c_str(), _name.c_str());
                 //for (const auto& item : _children)
-                for (int i = 0; i < _children.size(); ++i)
+                for (size_t i = 0; i < _children.size(); ++i)
                 {
                     const auto& item = _children[i];
                     item->serialize(f, tabs_);
@@ -541,7 +541,6 @@ TreeItemPtr root;
 
 void init_xconf()
 {
-    void* my_callback_data = nullptr;
     json_parser parser;
 
     if (json_parser_init(&parser, NULL, parse_callback, &root)) 
@@ -615,7 +614,7 @@ int main(int, char**)
     ImGui_ImplOpenGL3_Init(glsl_version);
 
     //ImFont* font = io.Fonts->AddFontFromFileTTF("courier.ttf", 13);
-    ImFont* font = io.Fonts->AddFontFromFileTTF(".\\data\\fonts\\DejaVuLGCSansMono.ttf", 13.0f, NULL, io.Fonts->GetGlyphRangesCyrillic());
+    io.Fonts->AddFontFromFileTTF(".\\data\\fonts\\DejaVuLGCSansMono.ttf", 13.0f, NULL, io.Fonts->GetGlyphRangesCyrillic());
     //init_style(true, 0.5f);
     init_style2();
 
