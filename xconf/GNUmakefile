@@ -73,7 +73,7 @@ ifeq ($(findstring MINGW,$(UNAME_S)),MINGW)
 	AR=$(TOOLS_AR).exe
 	RANLIB=$(TOOLS_RANLIB).exe
 	STRIP=$(TOOLS_STRIP).exe
-	LD=$(CXX).exe
+	LD=$(CXX)
 	LIBS +=-lgdi32 -lopengl32 -limm32
 	BIN=$(APP_NAME).exe
 endif
