@@ -416,13 +416,13 @@ template<typename T> void set_any(T value, std::any& any)
     T value_check = std::any_cast<T>(any);
 }
 
-int my_callback(void* userdata, int type, const char* data, uint32_t length)
+int parse_callback(void* userdata, int type, const char* data, uint32_t length)
 {
     switch (type) {
     case JSON_OBJECT_BEGIN:
     case JSON_ARRAY_BEGIN:
     {
-        printf("entering %s\n", (type == JSON_ARRAY_BEGIN) ? "array" : "object");
+        //printf("entering %s\n", (type == JSON_ARRAY_BEGIN) ? "array" : "object");
         auto node = std::make_shared<TreeItem>();
         node->_key = last_key;
         if (type == JSON_ARRAY_BEGIN)
@@ -437,7 +437,7 @@ int my_callback(void* userdata, int type, const char* data, uint32_t length)
     case JSON_OBJECT_END:
     case JSON_ARRAY_END:
     {
-        printf("leaving %s\n", (type == JSON_ARRAY_END) ? "array" : "object");
+        //printf("leaving %s\n", (type == JSON_ARRAY_END) ? "array" : "object");
         if (nodes_stack.size() != 1)
             nodes_stack.pop_back();
     }
@@ -449,7 +449,7 @@ int my_callback(void* userdata, int type, const char* data, uint32_t length)
     break;
     case JSON_STRING:
     {
-        printf("string value %*s\n", length, data);
+        //printf("string value %*s\n", length, data);
         if (last_key == "name")
         {
             nodes_stack.back()->_name = data;
@@ -525,11 +525,14 @@ int my_callback(void* userdata, int type, const char* data, uint32_t length)
     }
         break;
     case JSON_NULL:
-        printf("constant null\n"); break;
+        //printf("constant null\n"); 
+        break;
     case JSON_TRUE:
-        printf("constant true\n"); break;
+        //printf("constant true\n"); 
+        break;
     case JSON_FALSE:
-        printf("constant false\n"); break;
+        //printf("constant false\n"); 
+        break;
     }
     return 0;
 }
@@ -541,7 +544,7 @@ void init_xconf()
     void* my_callback_data = nullptr;
     json_parser parser;
 
-    if (json_parser_init(&parser, NULL, my_callback, &root)) 
+    if (json_parser_init(&parser, NULL, parse_callback, &root)) 
     {
         fprintf(stderr, "something wrong happened during init\n");
     }

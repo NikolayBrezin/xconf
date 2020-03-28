@@ -4,3 +4,10 @@
 /xconf/xconf.vcxproj.user
 /xconf/imgui.ini
 /xconf/data/out.json
+/xconf/imgui/*.o
+/xconf/json/*.o
+/xconf/gl3w/*.o
+/xconf/gl3w/*.a
+/xconf/imgui/*.a
+/xconf/json/*.a
+/xconf/*.exe
