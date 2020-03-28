@@ -416,6 +416,13 @@ template<typename T> void set_any(T value, std::any& any)
     T value_check = std::any_cast<T>(any);
 }
 
+void set_data(TreeItemPtr& node, const char* data, std::any& field)
+{
+    if (node->_type == "float")    set_any((float)std::atof(data), field);
+    else if (node->_type == "uint32_t") set_any((int)std::atoi(data), field);
+    else assert(0);
+}
+
 int parse_callback(void* userdata, int type, const char* data, uint32_t length)
 {
     switch (type) {
@@ -477,27 +484,19 @@ int parse_callback(void* userdata, int type, const char* data, uint32_t length)
             auto& node = nodes_stack.back();
             if (last_key == "val")
             {
-                if      (node->_type == "float")    set_any((float) std::atof(data), node->_value);
-                else if (node->_type == "uint32_t") set_any((int)   std::atoi(data), node->_value);
-                else assert(0);
+                set_data(node, data, node->_value);
             }
             else if (last_key == "val_min")
             {
-                if      (node->_type == "float")    set_any((float) std::atof(data), node->_min_v);
-                else if (node->_type == "uint32_t") set_any((int)   std::atoi(data), node->_min_v);
-                else assert(0);
+                set_data(node, data, node->_min_v);
             }
             else if (last_key == "val_max")
             {
-                if      (node->_type == "float")    set_any((float) std::atof(data), node->_max_v);
-                else if (node->_type == "uint32_t") set_any((int)   std::atoi(data), node->_max_v);
-                else assert(0);
+                set_data(node, data, node->_max_v);
             }
             else if (last_key == "val_default")
             {
-                if      (node->_type == "float")    set_any((float) std::atof(data), node->_val_default);
-                else if (node->_type == "uint32_t") set_any((int)   std::atoi(data), node->_val_default);
-                else assert(0);
+                set_data(node, data, node->_val_default);
             }
         }
         break;
@@ -552,15 +551,17 @@ void init_xconf()
     }
 
     std::ifstream input(".\\data\\fadec.json.data");
+    assert(input.is_open());
     while (input)
     {
         std::string line;
         std::getline(input, line);
+        std::cout << "error parsing line: " << line << "\n";
         auto ret = json_parser_string(&parser, line.c_str(), line.size(), nullptr);
         if (ret) 
         {
-            /* error happened : print a message or something */
-            break;
+            std::cout << "error parsing line: " << line << "\n";
+            exit(-1);
         }
     }
     json_parser_free(&parser);
