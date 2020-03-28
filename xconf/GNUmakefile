@@ -32,10 +32,10 @@ else
 	FLAGS+=-fno-lto
 endif
 
-CFLAGS= -std=gnu2x $(COMPILE_FLAGS)
-CXXFLAGS= -std=gnu++2a $(COMPILE_FLAGS)  -I. -Ijson -Igl3w -Iimgui  -DIMGUI_IMPL_OPENGL_LOADER_GL3W 
+CFLAGS=  $(COMPILE_FLAGS)
+CXXFLAGS= -std=c++17 $(COMPILE_FLAGS)  -I. -Ijson -Igl3w -Iimgui  -DIMGUI_IMPL_OPENGL_LOADER_GL3W 
 
-LIBS =-lglfw3
+LIBS =-lglfw
 
 
 
