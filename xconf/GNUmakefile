@@ -18,7 +18,7 @@ APP_LIBS= json/libjson.a gl3w/libgl3w.a imgui/libimgui.a
 
 
 LTO ?= no
-COMPILE_FLAGS = -g3 -ggdb -Wall -Wformat -ffunction-sections -fdata-sections
+COMPILE_FLAGS = -g3 -ggdb -Wall -Wformat -ffunction-sections -fdata-sections -Wp,-M,-MP,-MT,$@,-MF,.dep/$(@F).dep
 
 
 
@@ -88,7 +88,7 @@ build_info:
 	@echo host system  ... $(HOST)
 
 clean:
-	rm -f $(BIN) $(APP_LIBS) $(APP_OBJ) $(JSON_OBJS) $(GL3W_OBJS) $(IMGUI_OBJS)
+	rm -fr $(BIN) $(APP_LIBS) $(APP_OBJ) $(JSON_OBJS) $(GL3W_OBJS) $(IMGUI_OBJS) .dep
 
 strip:
 	$(STRIP) $(BIN)
@@ -158,5 +158,5 @@ $(BIN):$(APP_LIBS) $(APP_OBJ)
 #--------------------------------------------------------------
 
 
-
+-include $(shell mkdir .dep 2>/dev/null) $(wildcard .dep/*)
 
