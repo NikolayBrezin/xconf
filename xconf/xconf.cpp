@@ -413,14 +413,13 @@ std::string last_key = "root";
 template<typename T> void set_any(T value, std::any& any)
 {
     any = value;
-    T value_check = std::any_cast<T>(any);
 }
 
 void set_data(TreeItemPtr& node, const char* data, std::any& field)
 {
     if (node->_type == "float")    set_any((float)std::atof(data), field);
     else if (node->_type == "uint32_t") set_any((int)std::atoi(data), field);
-    else assert(0);
+    else std::cout << "error rading data: unknown type [" << node->_type << "]\n";
 }
 
 int parse_callback(void* userdata, int type, const char* data, uint32_t length)
@@ -429,7 +428,6 @@ int parse_callback(void* userdata, int type, const char* data, uint32_t length)
     case JSON_OBJECT_BEGIN:
     case JSON_ARRAY_BEGIN:
     {
-        //printf("entering %s\n", (type == JSON_ARRAY_BEGIN) ? "array" : "object");
         auto node = std::make_shared<TreeItem>();
         node->_key = last_key;
         if (type == JSON_ARRAY_BEGIN)
@@ -456,7 +454,6 @@ int parse_callback(void* userdata, int type, const char* data, uint32_t length)
     break;
     case JSON_STRING:
     {
-        //printf("string value %*s\n", length, data);
         if (last_key == "name")
         {
             nodes_stack.back()->_name = data;
@@ -475,7 +472,7 @@ int parse_callback(void* userdata, int type, const char* data, uint32_t length)
         }
         else
         {
-            //assert(0 && "unsupported record");
+            std::cout << "error parsing unknown last_key: " << last_key << "\n";
         }
     }
         break;
@@ -498,6 +495,8 @@ int parse_callback(void* userdata, int type, const char* data, uint32_t length)
             {
                 set_data(node, data, node->_val_default);
             }
+            else
+                std::cout << "error parsing unknown last_key: " << last_key << "\n";
         }
         break;
     case JSON_FLOAT:
@@ -506,22 +505,22 @@ int parse_callback(void* userdata, int type, const char* data, uint32_t length)
         if (last_key == "val")
         {
             if (node->_type == "float")    set_any((float)std::atof(data), node->_value);
-            else assert(0);
+            else std::cout << "error parsing unknown type: " << node->_type << "\n";
         }
         else if (last_key == "val_min")
         {
             if (node->_type == "float")    set_any((float)std::atof(data), node->_min_v);
-            else assert(0);
+            else std::cout << "error parsing unknown type: " << node->_type << "\n";
         }
         else if (last_key == "val_max")
         {
             if (node->_type == "float")    set_any((float)std::atof(data), node->_max_v);
-            else assert(0);
+            else std::cout << "error parsing unknown type: " << node->_type << "\n";
         }
         else if (last_key == "val_default")
         {
             if (node->_type == "float")    set_any((float)std::atof(data), node->_val_default);
-            else assert(0);
+            else std::cout << "error parsing unknown type: " << node->_type << "\n";
         }
     }
         break;
@@ -550,19 +549,25 @@ void init_xconf()
         fprintf(stderr, "something wrong happened during init\n");
     }
 
-    std::ifstream input(".\\data\\fadec.json.data");
-    assert(input.is_open());
+    std::string file_name = ".\\data\\fadec.json.data";
+    std::ifstream input(file_name);
+    if (!input)
+        std::cout << "error opening file " << file_name << " for reading \n";
+    if(!input.is_open())
+        std::cout << "error opening file " << file_name << " for reading \n";
+
+    int counter = 1;
     while (input)
     {
         std::string line;
         std::getline(input, line);
-        std::cout << "error parsing line: " << line << "\n";
         auto ret = json_parser_string(&parser, line.c_str(), line.size(), nullptr);
         if (ret) 
         {
-            std::cout << "error parsing line: " << line << "\n";
+            std::cout << "error parsing line " << counter << ": "  << line << "\n";
             exit(-1);
         }
+        ++counter;
     }
     json_parser_free(&parser);
     root = nodes_stack.back();
@@ -577,8 +582,10 @@ void render_xconf_window()
     ImGui::SameLine();
     if (ImGui::Button("Save"))
     {
-        FILE* f = fopen(".\\data\\out.json", "w");
-        assert(f);
+        const char* file_name = ".\\data\\out.json";
+        FILE* f = fopen(file_name, "w");
+        if (!f)
+            std::cout << "error opening file " << file_name << " for writing \n";
         root->serialize(f);
         fclose(f);
     }
