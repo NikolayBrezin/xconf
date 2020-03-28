@@ -467,7 +467,9 @@ int parse_callback(void* userdata, int type, const char* data, uint32_t length)
             nodes_stack.back()->_unit = data;
         }
         else
-            assert(0 && "unsupported record");
+        {
+            //assert(0 && "unsupported record");
+        }
     }
         break;
     case JSON_INT:
