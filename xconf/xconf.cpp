@@ -19,6 +19,7 @@
 
 #include "gl3w/gl3w.h"            // Initialize with gl3wInit()
 #include <GLFW/glfw3.h>
+#include <libserialport.h>
 
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
@@ -39,6 +40,129 @@ bool show_demo_window = false;
 struct TreeItem;
 using TreeItemPtr = std::shared_ptr<TreeItem>;
 TreeItemPtr root;
+
+static bool read_serial(std::string& json)
+{
+  /* A pointer to a null-terminated array of pointers to
+   * struct sp_port, which will contain the ports found.*/
+  struct sp_port **port_list;
+
+  std::cout<<"Getting port list." << std::endl;
+
+  /* Call sp_list_ports() to get the ports. The port_list
+   * pointer will be updated to refer to the array created. */
+  enum sp_return result = sp_list_ports(&port_list);
+
+  if (result != SP_OK)
+    {
+        std::cout<<"sp_list_ports() failed!" << std::endl;
+  	return 0;
+    }
+
+  /* Iterate through the ports. When port_list[i] is NULL
+   * this indicates the end of the list. */
+  int i;
+  for (i = 0; port_list[i] != NULL; i++)
+    {
+  	struct sp_port *port = port_list[i];
+
+  	std::cout<<"port: " << sp_get_port_name(port) << std::endl;
+  	std::cout<<"\t: " << sp_get_port_description(port) << std::endl;
+
+
+	/* Identify the transport which this port is connected through,
+	 * e.g. native port, USB or Bluetooth. */
+	enum sp_transport transport = sp_get_port_transport(port);
+
+	if (transport == SP_TRANSPORT_NATIVE) {
+		/* This is a "native" port, usually directly connected
+		 * to the system rather than some external interface. */
+		std::cout<<"\t: type: native" << std::endl;
+	} else if (transport == SP_TRANSPORT_USB) {
+		/* This is a USB to serial converter of some kind. */
+		std::cout<<"\t: type: usb" << std::endl;
+
+		/* Display string information from the USB descriptors. */
+		std::string serial = sp_get_port_usb_serial(port) ;
+
+		std::cout<<"\t: manufacturer:\t" << sp_get_port_usb_manufacturer(port) << std::endl;
+		std::cout<<"\t: product:\t"      << sp_get_port_usb_product(port) << std::endl;
+		std::cout<<"\t: serial:\t"       << serial << std::endl;
+
+		/* Display USB vendor and product IDs. */
+		int usb_vid, usb_pid;
+		sp_get_port_usb_vid_pid(port, &usb_vid, &usb_pid);
+
+		std::cout << "\t vid:" << std::hex << usb_vid << "\tpid:" << usb_pid << std::dec << std::endl;
+
+		/* Display bus and address. */
+		int usb_bus, usb_address;
+		sp_get_port_usb_bus_address(port, &usb_bus, &usb_address);
+		std::cout << "\t bus:" << std::hex << usb_bus << "\taddress:" << usb_address << std::dec << std::endl;
+
+
+		// проверяемся по серийному номеру девайса
+		if ( serial == std::string("348F377A8540"))
+		{
+		    sp_return spr ;
+		    std::cout << "fadec found" << std::endl ;
+		    spr = sp_open(port, SP_MODE_READ_WRITE);
+		    constexpr char device_read_config_command[] = "rc\r" ;
+
+		    spr = sp_blocking_write(port, device_read_config_command , strlen(device_read_config_command) , 1000);
+
+		    constexpr size_t size = 32*1024;
+		    char buff[size] ;
+		    spr = sp_blocking_read(port, buff, size, 1000);
+		    if ( !spr )
+		      std::cout << "fadec read timeout" << std::endl ;
+		    else
+		      {
+		        std::cout << buff+strlen(device_read_config_command) << std::endl ;
+		        json = buff+strlen(device_read_config_command) ;
+
+		        // сохранения ответа девайса
+		        std::cout << "save device JSON config to file " << out_file_name << "\n";
+		        std::ofstream output(out_file_name);
+		        if (!output)
+		            std::cout << "error opening file " << out_file_name << " for writing \n";
+		        if(!output.is_open())
+		            std::cout << "error opening file " << data_file_name << " for writing \n";
+
+		        output<<json ;
+		        output.close();
+
+		      }
+
+		    spr = sp_close(port) ;
+		    (void)spr ;
+		    break ;
+		}
+
+
+	} else if (transport == SP_TRANSPORT_BLUETOOTH) {
+		/* This is a Bluetooth serial port. */
+		std::cout<<"\t: type: bluetooth" << std::endl;
+
+		/* Display Bluetooth MAC address. */
+		std::cout<<"\t: mac: " << sp_get_port_bluetooth_address(port) << std::endl;
+	}
+    }
+
+   std::cout<<"Found "<< i << " ports"<< std::endl;
+
+   /* Free the array created by sp_list_ports(). */
+   sp_free_port_list(port_list);
+
+   /* Note that this will also free all the sp_port structures
+    * it points to. If you want to keep one of them (e.g. to
+    * use that port in the rest of your program), take a copy
+    * of it first using sp_copy_port(). */
+
+
+   return false ;
+
+}
 
 static void HelpMarker(const char* desc)
 {
@@ -574,7 +698,7 @@ void load_data(TreeItemPtr& root)
     {
         fprintf(stderr, "something wrong happened during init\n");
     }
-
+#if 0
     std::cout << "load JSON config from file " << data_file_name << "\n";
     std::ifstream input(data_file_name);
     if (!input)
@@ -595,6 +719,17 @@ void load_data(TreeItemPtr& root)
         }
         ++counter;
     }
+#else
+    std::string json = "{\"fadec\": {\"name\":\"Электронно-цифровая система управления двигателем (ЭСУД) с полной ответственностью\"}}" ;
+
+    if ( read_serial(json) )
+       if (json_parser_string(&parser, json.c_str(), (uint32_t)json.size(), nullptr))
+    	 {
+    	   std::cout << "device json data parsing error, see dump /data/in.json" << std::endl;
+    	   exit(-1);
+    	 }
+#endif
+
     json_parser_free(&parser);
     root = nodes_stack.back();
 }
