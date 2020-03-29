@@ -118,19 +118,28 @@ struct TreeItem
         ImGui::SameLine();
         ImGui::Text(unit);
     }
-    
+
+    void process_children()
+    {
+        for (const auto& item : _children)
+        {
+            item->draw();
+        }
+    }
     void draw()
     {
         if (!_children.empty())
         {
-            if (ImGui::TreeNodeEx(_name.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+            if (!_name.empty())
             {
-                for (const auto& item : _children)
+                if (ImGui::TreeNodeEx(_name.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
                 {
-                    item->draw();
+                    process_children();
+                    ImGui::TreePop();
                 }
-                ImGui::TreePop();
             }
+            else
+                process_children();
         }
         else
         {
