@@ -4,6 +4,7 @@
 /xconf/xconf.vcxproj.user
 /xconf/imgui.ini
 /xconf/data/out.json
+/xconf/data/fadec.json
 /xconf/imgui/*.o
 /xconf/json/*.o
 /xconf/gl3w/*.o
