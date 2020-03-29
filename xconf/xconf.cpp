@@ -10,6 +10,7 @@
 #include <any>
 #include <functional>
 #include <algorithm>
+#include <sstream>
 #include <stdio.h>
 
 #include "json.h"
@@ -109,8 +110,7 @@ static bool read_serial(std::string& json)
 	( serial == std::string("348F377A8540")
 #else
 	(true)
-#endif
-		    )
+#endif		    
 		{
 		    sp_return spr ;
 		    std::cout << "fadec found" << std::endl ;
@@ -298,6 +298,21 @@ struct TreeItem
                             return res;
                         }, _unit.c_str());
                 }
+                else if (_type == "const_string")
+                {
+                    std::string value = std::any_cast<std::string>(_value);
+                    std::string v_min = std::any_cast<std::string>(_min_v);
+                    std::string v_max = std::any_cast<std::string>(_max_v);
+                    ImGui::Text(v_min.c_str());
+                    ImGui::SameLine();
+                    ImGui::PushItemWidth(75);
+                    ImGui::Text("%s", value.c_str());
+                    ImGui::PopItemWidth();
+                    ImGui::SameLine();
+                    ImGui::Text(v_max.c_str());
+                    ImGui::SameLine();
+                    ImGui::Text(_unit.c_str());
+                }
                 else
                 {
                     //assert(0 && "unknown type");
@@ -306,55 +321,68 @@ struct TreeItem
             }
         }
     };
-    void serialize(FILE* f, std::string tabs = "")
+    template<typename T> void out_data(std::stringstream& s, std::string tabs = "")
+    {
+        s << tabs << "\"val\": "            << std::any_cast<T>(_value)       << ", \n";
+        s << tabs << "\"val_min\": "        << std::any_cast<T>(_min_v)       << ", \n";
+        s << tabs << "\"val_max\": "        << std::any_cast<T>(_max_v)       << ", \n";
+        s << tabs << "\"val_default\": "    << std::any_cast<T>(_val_default) << "  \n";
+    }
+    template<> void out_data<std::string>(std::stringstream& s, std::string tabs)
+    {
+        s << tabs << "\"val\": \""            << std::any_cast<std::string>(_value)       << "\", \n";
+        s << tabs << "\"val_min\": \""        << std::any_cast<std::string>(_min_v)       << "\", \n";
+        s << tabs << "\"val_max\": \""        << std::any_cast<std::string>(_max_v)       << "\", \n";
+        s << tabs << "\"val_default\": \""    << std::any_cast<std::string>(_val_default) << "\"\n";
+    }    
+    void serialize(std::stringstream& s, std::string tabs = "")
     {
         if (!tabs.empty())
-            fprintf(f, "%s\"%s\": \n", tabs.c_str(), _key.c_str());
+            s << tabs << "\"" << _key << "\": \n";
         if (!_children.empty())
         {
-            fprintf(f, "%s%s\n", tabs.c_str(), _array_flag ? "[" : "{");
+            if (!tabs.empty())
+                s << tabs.c_str() << (_array_flag ? "[" : "{") << "\n";
             {
                 std::string tabs_ = tabs + "    ";
                 if (!_name.empty())
-                    fprintf(f, "%s\"name\": \"%s\",\n", tabs_.c_str(), _name.c_str());
-                //for (const auto& item : _children)
+                    s << tabs_ << "\"name\": \"" << _name << "\",\n";
                 for (size_t i = 0; i < _children.size(); ++i)
                 {
                     const auto& item = _children[i];
-                    item->serialize(f, tabs_);
+                    item->serialize(s, tabs_);
                     if (i != _children.size() - 1)
-                        fprintf(f, ",\n");
+                        s << ",\n";
                     else
-                        fprintf(f, "\n");
+                        s << "\n";
                 }
             }
-            fprintf(f, "%s%s", tabs.c_str(), _array_flag ? "]" : "}");
+            if (!tabs.empty())
+                s << tabs << (_array_flag ? "]" : "}");
         }
         else
         {            
-            fprintf(f, "%s{\n", tabs.c_str());
+            s << tabs << "{\n";
             {
                 std::string tabs_ = tabs + "    ";
-                fprintf(f, "%s\"name\": \"%s\",\n",      tabs_.c_str(), _name.c_str());
-                fprintf(f, "%s\"info\": \"%s\",\n",      tabs_.c_str(), _info.c_str());
-                fprintf(f, "%s\"typeof\": \"%s\",\n",    tabs_.c_str(), _type.c_str());
-                fprintf(f, "%s\"unit\": \"%s\",\n",      tabs_.c_str(), _unit.c_str());
+                s << tabs_ << "\"name\": \""    << _name << "\",\n";
+                s << tabs_ << "\"info\": \""    << _info << "\",\n";
+                s << tabs_ << "\"typeof\": \""  << _type << "\",\n";
+                s << tabs_ << "\"unit\": \""    << _unit << "\",\n";
                 if (_type == "float")
                 {
-                    fprintf(f, "%s\"val\": %f,\n",           tabs_.c_str(), std::any_cast<float>(_value));
-                    fprintf(f, "%s\"val_min\": %f,\n",       tabs_.c_str(), std::any_cast<float>(_min_v));
-                    fprintf(f, "%s\"val_max\": %f,\n",       tabs_.c_str(), std::any_cast<float>(_max_v));
-                    fprintf(f, "%s\"val_default\": %f\n",    tabs_.c_str(), std::any_cast<float>(_val_default));
+                    out_data<float>(s, tabs_);
                 }
                 else if (_type == "uint32_t")
                 {
-                    fprintf(f, "%s\"val\": %d,\n",           tabs_.c_str(), std::any_cast<int>(_value));
-                    fprintf(f, "%s\"val_min\": %d,\n",       tabs_.c_str(), std::any_cast<int>(_min_v));
-                    fprintf(f, "%s\"val_max\": %d,\n",       tabs_.c_str(), std::any_cast<int>(_max_v));
-                    fprintf(f, "%s\"val_default\": %d\n",   tabs_.c_str(), std::any_cast<int>(_val_default));
+                    out_data<int>(s, tabs_);
+                }
+                else if (_type == "const_string")
+                {
+                    out_data<std::string>(s, tabs_);
                 }
             }
-            fprintf(f, "%s}", tabs.c_str());
+            s << tabs << "}";
         }
     }
 };
@@ -569,6 +597,7 @@ void set_data(TreeItemPtr& node, const char* data, std::any& field)
 {
     if (node->_type == "float")    set_any((float)std::atof(data), field);
     else if (node->_type == "uint32_t") set_any((int)std::atoi(data), field);
+    else if (node->_type == "const_string") set_any((std::string)(data), field);
     else std::cout << "error rading data: unknown type [" << node->_type << "]\n";
 }
 
@@ -619,17 +648,21 @@ int parse_callback(void* userdata, int type, const char* data, uint32_t length)
         {
             nodes_stack.back()->_unit = data;
         }
-        else if (last_key == "hwver")
+        else if (last_key == "val")
         {
-            device_info._hw_ver = data;
+            nodes_stack.back()->_value = std::string(data);
         }
-        else if (last_key == "fwver")
+        else if (last_key == "val_min")
         {
-            device_info._fw_ver = data;
+            nodes_stack.back()->_min_v = std::string(data);
         }
-        else if (last_key == "sernum")
+        else if (last_key == "val_max")
         {
-            device_info._ser_num = data;
+            nodes_stack.back()->_max_v = std::string(data);
+        }
+        else if (last_key == "val_default")
+        {
+            nodes_stack.back()->_val_default = std::string(data);
         }
         else
         {
@@ -730,17 +763,41 @@ void load_data(TreeItemPtr& root)
 #else
     std::string json;
 
-    if ( read_serial(json) )
-       if (json_parser_string(&parser, json.c_str(), (uint32_t)json.size(), nullptr))
-    	 {
-    	   std::cout << "device json data parsing error, see dump /data/in.json" << std::endl;
-    	   exit(-1);
-    	 }
+    if (read_serial(json))
+    {
+        std::ofstream out(data_file_name);
+        out << json;
+        out.close();
+        if (json_parser_string(&parser, json.c_str(), (uint32_t)json.size(), nullptr))
+        {
+            std::cout << "device json data parsing error, see dump /data/in.json" << std::endl;
+            exit(-1);
+        }
+    }
 #endif
 
     json_parser_free(&parser);
     if (!nodes_stack.empty())
         root = nodes_stack.back();
+}
+
+void save_data(TreeItemPtr& root)
+{
+    if (root)
+    {
+        std::stringstream s;
+        s << "{\n";
+        root->serialize(s);
+        s << "}\n";
+        std::ofstream out_file(out_file_name);
+        if (!out_file)
+            std::cout << "error opening file " << out_file_name << " for writing \n";
+        else
+        {
+            out_file << s.str();
+            out_file.close();
+        }
+    }
 }
 
 void render_xconf_window()
@@ -758,11 +815,7 @@ void render_xconf_window()
     {
         if (root)
         {
-            FILE* f = fopen(out_file_name, "w");
-            if (!f)
-                std::cout << "error opening file " << out_file_name << " for writing \n";
-            root->serialize(f);
-            fclose(f);
+            save_data(root);
         }
     }
     ImGui::SameLine();
