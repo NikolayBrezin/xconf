@@ -17,3 +17,7 @@
 /FreeRTOS_TAD_logs/
 
 
+/xconf/.settings
+/xconf/*.project
+/xconf/.cproject
+/.metadata
