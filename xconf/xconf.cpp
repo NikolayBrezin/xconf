@@ -837,11 +837,6 @@ void render_xconf_window()
             current_font = font_id;
         }
     }
-
-    ImGui::Text("hardware version: %s", device_info._hw_ver.c_str());
-    ImGui::Text("firmware version: %s", device_info._fw_ver.c_str());
-    ImGui::Text("serial number: %s",    device_info._ser_num.c_str());
-
     if (root)
         root->draw();
     ImGui::End();
