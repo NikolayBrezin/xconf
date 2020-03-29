@@ -85,8 +85,10 @@ static bool read_serial(std::string& json)
 		/* Display string information from the USB descriptors. */
 		std::string serial = sp_get_port_usb_serial(port) ;
 
-		std::cout<<"\t: manufacturer:\t" << sp_get_port_usb_manufacturer(port) << std::endl;
-		std::cout<<"\t: product:\t"      << sp_get_port_usb_product(port) << std::endl;
+        auto man = sp_get_port_usb_manufacturer(port);
+        auto prod = sp_get_port_usb_product(port);
+		std::cout<<"\t: manufacturer:\t" << (man ? man : "unknown") << std::endl;
+		std::cout<<"\t: product:\t"      << (prod ? prod : "unknown") << std::endl;
 		std::cout<<"\t: serial:\t"       << serial << std::endl;
 
 		/* Display USB vendor and product IDs. */
@@ -102,7 +104,7 @@ static bool read_serial(std::string& json)
 
 
 		// проверяемся по серийному номеру девайса
-		if ( serial == std::string("348F377A8540"))
+		if (true) //( serial == std::string("348F377A8540"))
 		{
 		    sp_return spr ;
 		    std::cout << "fadec found" << std::endl ;
@@ -136,7 +138,7 @@ static bool read_serial(std::string& json)
 
 		    spr = sp_close(port) ;
 		    (void)spr ;
-		    break ;
+		    return true ;
 		}
 
 
@@ -720,7 +722,7 @@ void load_data(TreeItemPtr& root)
         ++counter;
     }
 #else
-    std::string json = "{\"fadec\": {\"name\":\"Электронно-цифровая система управления двигателем (ЭСУД) с полной ответственностью\"}}" ;
+    std::string json;
 
     if ( read_serial(json) )
        if (json_parser_string(&parser, json.c_str(), (uint32_t)json.size(), nullptr))
@@ -731,7 +733,8 @@ void load_data(TreeItemPtr& root)
 #endif
 
     json_parser_free(&parser);
-    root = nodes_stack.back();
+    if (!nodes_stack.empty())
+        root = nodes_stack.back();
 }
 
 void render_xconf_window()

@@ -52,7 +52,7 @@ ifeq ($(UNAME_S), Linux) #LINUX
 		STRIP=x86_64-kgp-mingw32-$(TOOLS_STRIP)
 		AR=x86_64-kgp-mingw32-$(TOOLS_AR)
 		RANLIB=x86_64-kgp-mingw32-$(TOOLS_RANLIB)
-		LIBS += -lopengl32 -lgdi32
+		LIBS += -lopengl32 -lgdi32 -lsetupapi
 		BIN=$(APP_NAME).exe
 	else
 		CC=$(TOOLS_CC)
@@ -74,7 +74,7 @@ ifeq ($(findstring MINGW,$(UNAME_S)),MINGW)
 	RANLIB=$(TOOLS_RANLIB).exe
 	STRIP=$(TOOLS_STRIP).exe
 	LD=$(CXX)
-	LIBS +=-lgdi32 -lopengl32 -limm32
+	LIBS +=-lgdi32 -lopengl32 -limm32 -lsetupapi
 	BIN=$(APP_NAME).exe
 endif
 
