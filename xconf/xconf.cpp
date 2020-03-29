@@ -27,10 +27,14 @@
 #pragma comment(lib, "legacy_stdio_definitions")
 #endif
 
-std::string data_file_name = "./data/fadec.json";
 const char* glsl_version = "#version 130";
+
+std::string data_file_name = "./data/fadec.json";
+const char* out_file_name = "./data/out.json";
 GLFWwindow* window = nullptr;
 static int current_font = 5;
+ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+bool show_demo_window = false;
 
 struct TreeItem;
 using TreeItemPtr = std::shared_ptr<TreeItem>;
@@ -210,8 +214,6 @@ static void glfw_error_callback(int error, const char* description)
 {
     fprintf(stderr, "Glfw Error %d: %s\n", error, description);
 }
-
-
 
 void init_style2()
 {
@@ -604,10 +606,9 @@ void render_xconf_window()
     {
         if (root)
         {
-            const char* file_name = "./data/out.json";
-            FILE* f = fopen(file_name, "w");
+            FILE* f = fopen(out_file_name, "w");
             if (!f)
-                std::cout << "error opening file " << file_name << " for writing \n";
+                std::cout << "error opening file " << out_file_name << " for writing \n";
             root->serialize(f);
             fclose(f);
         }
@@ -620,9 +621,6 @@ void render_xconf_window()
 int main(int, char**)
 {
     init(window);
-
-    bool show_demo_window = true;
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     while (!glfwWindowShouldClose(window))
     {
