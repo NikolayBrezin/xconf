@@ -26,6 +26,8 @@
 #pragma comment(lib, "legacy_stdio_definitions")
 #endif
 
+std::string data_file_name = "./data/fadec.json";
+
 struct TreeItem;
 using TreeItemPtr = std::shared_ptr<TreeItem>;
 TreeItemPtr root;
@@ -514,13 +516,12 @@ void load_data(TreeItemPtr& root)
         fprintf(stderr, "something wrong happened during init\n");
     }
 
-    std::string file_name = "./data/fadec.json.data";
-    std::cout << "load JSON config from file " << file_name << "\n";
-    std::ifstream input(file_name);
+    std::cout << "load JSON config from file " << data_file_name << "\n";
+    std::ifstream input(data_file_name);
     if (!input)
-        std::cout << "error opening file " << file_name << " for reading \n";
+        std::cout << "error opening file " << data_file_name << " for reading \n";
     if(!input.is_open())
-        std::cout << "error opening file " << file_name << " for reading \n";
+        std::cout << "error opening file " << data_file_name << " for reading \n";
 
     int counter = 1;
     while (input)
