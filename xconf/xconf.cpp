@@ -9,6 +9,7 @@
 #include <memory>
 #include <any>
 #include <functional>
+#include <algorithm>
 #include <stdio.h>
 
 #include "json.h"
@@ -27,6 +28,9 @@
 #endif
 
 std::string data_file_name = "./data/fadec.json";
+const char* glsl_version = "#version 130";
+GLFWwindow* window = nullptr;
+static int current_font = 5;
 
 struct TreeItem;
 using TreeItemPtr = std::shared_ptr<TreeItem>;
@@ -40,6 +44,18 @@ static void HelpMarker(const char* desc)
         ImGui::BeginTooltip();
         ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
         ImGui::TextUnformatted(desc);
+        ImGui::PopTextWrapPos();
+        ImGui::EndTooltip();
+    }
+}
+static void TextWithTooltip(const char* fmt, const char* desc, const char* tooltip)
+{
+    ImGui::TextColored(ImVec4(1, 1, 0, 1), fmt, desc, tooltip);
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::BeginTooltip();
+        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+        ImGui::TextUnformatted(tooltip);
         ImGui::PopTextWrapPos();
         ImGui::EndTooltip();
     }
@@ -76,10 +92,15 @@ struct TreeItem
         T v_max = std::any_cast<T>(max_v);
         ImGui::Text(fmt, v_min); 
         ImGui::SameLine();
+        ImGui::PushItemWidth(75);
         if (fun(&value, v_min, v_max))
         {
-            value_ = value;
+            if (v_min == v_max)
+                value_ = value;
+            else
+                value_ = std::clamp(value, v_min, v_max);
         }
+        ImGui::PopItemWidth();
         ImGui::SameLine();
         ImGui::Text(fmt, v_max);
         ImGui::SameLine();
@@ -101,29 +122,35 @@ struct TreeItem
         }
         else
         {
-            ImGui::PushItemWidth(50);
-            ImGui::Text("%-30s:", _name.c_str() );            
+            //ImGui::PushItemWidth(50);
+            //ImGui::Text("%-30s:", _name.c_str() );
+            TextWithTooltip("%s:", _name.c_str(), _info.c_str());
+            //TextWithTooltip("**********##########++++++++++..........", _name.c_str(), _info.c_str());
             ImGui::SameLine();
-            ImGui::PushID(_key.c_str());
+            ImGui::SetCursorPosX(500);
+            ImGui::PushID(_key.c_str());            
             if (_type == "uint32_t")
             {
                 draw_control<int>(_value, _min_v, _max_v, "%5d", [](int* value, int v_min, int v_max)
                     {
-                        return ImGui::DragInt("", value, float(v_max - v_min) / 100, v_min, v_max);
+                        auto res = ImGui::DragInt("", value, float(v_max - v_min) / 100, v_min, v_max);
+                        return res;
                     }, _unit.c_str());
+
             }
             else if (_type == "float")
             {
                 draw_control<float>(_value, _min_v, _max_v, "%5.2f", [](float* value, float v_min, float v_max)
                     {
-                        return ImGui::DragFloat("", value, (v_max - v_min) / 100, v_min, v_max);
+                        auto res = ImGui::DragFloat("", value, (v_max - v_min) / 100, v_min, v_max);
+                        return res;
                     }, _unit.c_str());
             }
             else
                 assert(0 && "unknown type");
             ImGui::PopID();
-            ImGui::PopItemWidth();
-            ImGui::SameLine(); HelpMarker(_info.c_str());
+            //ImGui::PopItemWidth();
+            //ImGui::SameLine(); HelpMarker(_info.c_str());
         }
     };
     void serialize(FILE* f, std::string tabs = "")
@@ -184,8 +211,7 @@ static void glfw_error_callback(int error, const char* description)
     fprintf(stderr, "Glfw Error %d: %s\n", error, description);
 }
 
-const char* glsl_version = "#version 130";
-GLFWwindow* window = nullptr;
+
 
 void init_style2()
 {
@@ -365,11 +391,13 @@ int init(GLFWwindow*& window)
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
-    //ImGui::StyleColorsDark();
-    ImGui::StyleColorsClassic();
-    io.Fonts->AddFontFromFileTTF("./data/fonts/DejaVuLGCSansMono.ttf", 13.0f, NULL, io.Fonts->GetGlyphRangesCyrillic());
-    io.Fonts->AddFontFromFileTTF("./data/fonts/DejaVuLGCSansMono.ttf", 14.0f, NULL, io.Fonts->GetGlyphRangesCyrillic());
-    io.Fonts->AddFontFromFileTTF("./data/fonts/DejaVuLGCSansMono.ttf", 15.0f, NULL, io.Fonts->GetGlyphRangesCyrillic());
+    ImGui::StyleColorsDark();
+    //ImGui::StyleColorsClassic();
+    for (int i = 10; i <= 20; ++i)
+        io.Fonts->AddFontFromFileTTF("./data/fonts/DejaVuLGCSansMono.ttf", i, NULL, io.Fonts->GetGlyphRangesCyrillic());
+
+    ImFont* font = io.Fonts->Fonts[current_font];
+    io.FontDefault = font;
     //init_style(true, 0.5f);
     //init_style2();
 
@@ -542,12 +570,29 @@ void load_data(TreeItemPtr& root)
 
 void render_xconf_window()
 {
-    static bool show_style_editor = false;
     ImGui::Begin("XConf");
-
+    if (ImGui::Button("-"))
+    {
+        ImGuiIO& io = ImGui::GetIO();
+        int font_id = current_font - 1;
+        if (font_id >= 0)
+        {
+            ImFont* font = io.Fonts->Fonts[font_id];
+            io.FontDefault = font;
+            current_font = font_id;
+        }
+    }
+    ImGui::SameLine();
     if (ImGui::Button("+"))
     {
-        show_style_editor = !show_style_editor;
+        ImGuiIO& io = ImGui::GetIO();
+        int font_id = current_font + 1;
+        if (font_id < io.Fonts->Fonts.Size)
+        {
+            ImFont* font = io.Fonts->Fonts[font_id];
+            io.FontDefault = font;
+            current_font = font_id;
+        }
     }
     ImGui::SameLine();
     if (ImGui::Button("Load"))
@@ -570,11 +615,6 @@ void render_xconf_window()
     if (root)
         root->draw();
     ImGui::End();
-
-    if (show_style_editor)
-    {
-        ImGui::ShowStyleEditor();
-    }
 }
 
 int main(int, char**)
