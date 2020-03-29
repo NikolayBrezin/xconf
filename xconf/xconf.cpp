@@ -321,20 +321,13 @@ struct TreeItem
             }
         }
     };
-    template<typename T> void out_data(std::stringstream& s, std::string tabs = "")
+    template<typename T> void out_data(std::stringstream& s, std::string tabs = "", bool braces = false)
     {
-        s << tabs << "\"val\": "            << std::any_cast<T>(_value)       << ", \n";
-        s << tabs << "\"val_min\": "        << std::any_cast<T>(_min_v)       << ", \n";
-        s << tabs << "\"val_max\": "        << std::any_cast<T>(_max_v)       << ", \n";
-        s << tabs << "\"val_default\": "    << std::any_cast<T>(_val_default) << "  \n";
+        s << tabs << "\"val\": "            << (braces ? "\"" : "") << std::any_cast<T>(_value)        << (braces ? "\"" : "") << ", \n";
+        s << tabs << "\"val_min\": "        << (braces ? "\"" : "") << std::any_cast<T>(_min_v)        << (braces ? "\"" : "") << ", \n";
+        s << tabs << "\"val_max\": "        << (braces ? "\"" : "") << std::any_cast<T>(_max_v)        << (braces ? "\"" : "") << ", \n";
+        s << tabs << "\"val_default\": "    << (braces ? "\"" : "") << std::any_cast<T>(_val_default)  << (braces ? "\"" : "") << "  \n";
     }
-    template<> void out_data<std::string>(std::stringstream& s, std::string tabs)
-    {
-        s << tabs << "\"val\": \""            << std::any_cast<std::string>(_value)       << "\", \n";
-        s << tabs << "\"val_min\": \""        << std::any_cast<std::string>(_min_v)       << "\", \n";
-        s << tabs << "\"val_max\": \""        << std::any_cast<std::string>(_max_v)       << "\", \n";
-        s << tabs << "\"val_default\": \""    << std::any_cast<std::string>(_val_default) << "\"\n";
-    }    
     void serialize(std::stringstream& s, std::string tabs = "")
     {
         if (!tabs.empty())
@@ -379,7 +372,7 @@ struct TreeItem
                 }
                 else if (_type == "const_string")
                 {
-                    out_data<std::string>(s, tabs_);
+                    out_data<std::string>(s, tabs_, true);
                 }
             }
             s << tabs << "}";
