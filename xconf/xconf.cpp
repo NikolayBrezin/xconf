@@ -26,6 +26,12 @@
 #pragma comment(lib, "legacy_stdio_definitions")
 #endif
 
+std::string data_file_name = "./data/fadec.json";
+
+struct TreeItem;
+using TreeItemPtr = std::shared_ptr<TreeItem>;
+TreeItemPtr root;
+
 static void HelpMarker(const char* desc)
 {
     ImGui::TextDisabled("(?)");
@@ -39,8 +45,6 @@ static void HelpMarker(const char* desc)
     }
 }
 
-struct TreeItem;
-using TreeItemPtr = std::shared_ptr<TreeItem>;
 struct TreeItem
 {
     std::string _key;
@@ -65,7 +69,7 @@ struct TreeItem
     }
     
     template<typename T> void draw_control(std::any& value_, std::any& min_v, std::any& max_v, const char*fmt
-        , std::function<bool (T*, T, T)> fun)
+        , std::function<bool (T*, T, T)> fun, const char* unit)
     {
         T value = std::any_cast<T>(value_);
         T v_min = std::any_cast<T>(min_v);
@@ -78,6 +82,8 @@ struct TreeItem
         }
         ImGui::SameLine();
         ImGui::Text(fmt, v_max);
+        ImGui::SameLine();
+        ImGui::Text(unit);
     }
     
     void draw()
@@ -104,14 +110,14 @@ struct TreeItem
                 draw_control<int>(_value, _min_v, _max_v, "%5d", [](int* value, int v_min, int v_max)
                     {
                         return ImGui::DragInt("", value, float(v_max - v_min) / 100, v_min, v_max);
-                    });
+                    }, _unit.c_str());
             }
             else if (_type == "float")
             {
                 draw_control<float>(_value, _min_v, _max_v, "%5.2f", [](float* value, float v_min, float v_max)
                     {
                         return ImGui::DragFloat("", value, (v_max - v_min) / 100, v_min, v_max);
-                    });
+                    }, _unit.c_str());
             }
             else
                 assert(0 && "unknown type");
@@ -353,6 +359,22 @@ int init(GLFWwindow*& window)
         return 1;
     }
 
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+
+    //ImGui::StyleColorsDark();
+    ImGui::StyleColorsClassic();
+    io.Fonts->AddFontFromFileTTF("./data/fonts/DejaVuLGCSansMono.ttf", 13.0f, NULL, io.Fonts->GetGlyphRangesCyrillic());
+    io.Fonts->AddFontFromFileTTF("./data/fonts/DejaVuLGCSansMono.ttf", 14.0f, NULL, io.Fonts->GetGlyphRangesCyrillic());
+    io.Fonts->AddFontFromFileTTF("./data/fonts/DejaVuLGCSansMono.ttf", 15.0f, NULL, io.Fonts->GetGlyphRangesCyrillic());
+    //init_style(true, 0.5f);
+    //init_style2();
+
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init(glsl_version);
     return 0;
 }
 
@@ -485,9 +507,7 @@ int parse_callback(void* userdata, int type, const char* data, uint32_t length)
     return 0;
 }
 
-TreeItemPtr root;
-
-void init_xconf()
+void load_data(TreeItemPtr& root)
 {
     json_parser parser;
 
@@ -496,13 +516,12 @@ void init_xconf()
         fprintf(stderr, "something wrong happened during init\n");
     }
 
-    std::string file_name = "./data/fadec.json.data";
-    std::cout << "load JSON config from file " << file_name << "\n";
-    std::ifstream input(file_name);
+    std::cout << "load JSON config from file " << data_file_name << "\n";
+    std::ifstream input(data_file_name);
     if (!input)
-        std::cout << "error opening file " << file_name << " for reading \n";
+        std::cout << "error opening file " << data_file_name << " for reading \n";
     if(!input.is_open())
-        std::cout << "error opening file " << file_name << " for reading \n";
+        std::cout << "error opening file " << data_file_name << " for reading \n";
 
     int counter = 1;
     while (input)
@@ -523,47 +542,46 @@ void init_xconf()
 
 void render_xconf_window()
 {
+    static bool show_style_editor = false;
     ImGui::Begin("XConf");
+
+    if (ImGui::Button("+"))
+    {
+        show_style_editor = !show_style_editor;
+    }
+    ImGui::SameLine();
     if (ImGui::Button("Load"))
     {
+        load_data(root);
     }
     ImGui::SameLine();
     if (ImGui::Button("Save"))
     {
-        const char* file_name = "./data/out.json";
-        FILE* f = fopen(file_name, "w");
-        if (!f)
-            std::cout << "error opening file " << file_name << " for writing \n";
-        root->serialize(f);
-        fclose(f);
+        if (root)
+        {
+            const char* file_name = "./data/out.json";
+            FILE* f = fopen(file_name, "w");
+            if (!f)
+                std::cout << "error opening file " << file_name << " for writing \n";
+            root->serialize(f);
+            fclose(f);
+        }
     }
-    root->draw();
+    if (root)
+        root->draw();
     ImGui::End();
+
+    if (show_style_editor)
+    {
+        ImGui::ShowStyleEditor();
+    }
 }
 
 int main(int, char**)
 {
     init(window);
 
-    init_xconf();
-
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-
-    //ImGui::StyleColorsDark();
-    ImGui::StyleColorsClassic();
-    io.Fonts->AddFontFromFileTTF("./data/fonts/DejaVuLGCSansMono.ttf", 13.0f, NULL, io.Fonts->GetGlyphRangesCyrillic());
-    //init_style(true, 0.5f);
-    //init_style2();
-
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init(glsl_version);
-
-
-    bool show_demo_window = false;
+    bool show_demo_window = true;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     while (!glfwWindowShouldClose(window))

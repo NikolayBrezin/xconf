@@ -1,4 +1,0 @@
-11:24:26 **** Build of configuration Debug for project xconf ****
-make all HOST=linux -j12 
-g++ -std=gnu++2a -g3 -ggdb -Wall -Wformat -ffunction-sections -fdata-sections -Wp,-M,-MP,-MT,xconf.o,-MF,.dep/xconf.o.dep  -I. -Ijson -Igl3w -Iimgui  -DIMGUI_IMPL_OPENGL_LOADER_GL3W  -c -o xconf.o xconf.cpp
-g++ -Wl,-gc-sections -Wl,--defsym,__firmware_build_date__=20200329,--defsym,__firmware_build_time__=112429 -o xconf xconf.o -std=gnu++2a -g3 -ggdb -Wall -Wformat -ffunction-sections -fdata-sections -Wp,-M,-MP,-MT,xconf,-MF,.dep/xconf.dep  -I. -Ijson -Igl3w -Iimgui  -DIMGUI_IMPL_OPENGL_LOADER_GL3W  json/libjson.a gl3w/libgl3w.a imgui/libimgui.a -lglfw3 -lGL -ldl -lpthread -lrt
