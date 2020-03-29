@@ -104,7 +104,13 @@ static bool read_serial(std::string& json)
 
 
 		// проверяемся по серийному номеру девайса
-		if (true) //( serial == std::string("348F377A8540"))
+		if
+#ifdef __linux__
+	( serial == std::string("348F377A8540")
+#else
+	(true)
+#endif
+		    )
 		{
 		    sp_return spr ;
 		    std::cout << "fadec found" << std::endl ;
@@ -121,7 +127,7 @@ static bool read_serial(std::string& json)
 		    else
 		      {
 		        std::cout << buff+strlen(device_read_config_command) << std::endl ;
-		        json = buff+strlen(device_read_config_command) ;
+		        json = ( std::string ( buff )).substr ( strlen(device_read_config_command), 16551 ) ;
 
 		        // сохранения ответа девайса
 		        std::cout << "save device JSON config to file " << out_file_name << "\n";
