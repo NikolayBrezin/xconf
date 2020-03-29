@@ -14,7 +14,34 @@
 /xconf/*.o
 /xconf/xconf
 /xconf/.dep
+
 /FreeRTOS_TAD_logs/
+/.metadata/.log
+/.metadata/.plugins/org.eclipse.cdt.core/.log
+/.metadata/.plugins/org.eclipse.cdt.core/xconf.1585431544240.pdom
+/.metadata/.plugins/org.eclipse.cdt.ui/global-build.log
+/.metadata/.plugins/org.eclipse.core.resources/.projects/xconf/.indexes/properties.index
+/.metadata/.plugins/org.eclipse.core.resources/.projects/xconf/.markers.snap
+/.metadata/.plugins/org.eclipse.core.resources/.projects/xconf/.syncinfo.snap
+/.metadata/.plugins/org.eclipse.core.resources/.root/.indexes/properties.index
+/.metadata/.plugins/org.eclipse.core.resources/.root/.markers.snap
+/.metadata/.plugins/org.eclipse.core.resources/.safetable/org.eclipse.core.resources
+/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.cdt.ui.prefs
+/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.debug.core.prefs
+/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.debug.ui.prefs
+/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.launchbar.core.prefs
+/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.mylyn.tasks.ui.prefs
+/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.workbench.prefs
+/.metadata/.plugins/org.eclipse.e4.workbench/workbench.xmi
+/.metadata/version.ini
+
+/xconf/.settings/language.settings.xml
+/xconf/.settings/org.eclipse.cdt.codan.core.prefs
+/xconf/.settings/org.eclipse.cdt.core.prefs
+/xconf/.settings/org.eclipse.cdt.ui.prefs
+
+
+
 
 
 /xconf/.settings
