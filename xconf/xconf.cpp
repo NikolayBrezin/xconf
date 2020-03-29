@@ -107,7 +107,7 @@ static bool read_serial(std::string& json)
 		// проверяемся по серийному номеру девайса
 		if
 #ifdef __linux__
-	( serial == std::string("348F377A8540")
+	( serial == std::string("348F377A8540"))
 #else
 	(true)
 #endif		    
@@ -127,7 +127,7 @@ static bool read_serial(std::string& json)
 		    else
 		      {
 		        std::cout << buff+strlen(device_read_config_command) << std::endl ;
-		        json = ( std::string ( buff )).substr ( strlen(device_read_config_command), 16551 ) ;
+		        json = ( std::string ( buff )).substr ( strlen(device_read_config_command), 16798 ) ;
 
 		        // сохранения ответа девайса
 		        std::cout << "save device JSON config to file " << out_file_name << "\n";
