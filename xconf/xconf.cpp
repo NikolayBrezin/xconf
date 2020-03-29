@@ -65,6 +65,14 @@ static void TextWithTooltip(const char* fmt, const char* desc, const char* toolt
     }
 }
 
+struct DeviceInfo
+{
+    std::string _hw_ver;
+    std::string _fw_ver;
+    std::string _ser_num;
+};
+DeviceInfo device_info;
+
 struct TreeItem
 {
     std::string _key;
@@ -126,35 +134,35 @@ struct TreeItem
         }
         else
         {
-            //ImGui::PushItemWidth(50);
-            //ImGui::Text("%-30s:", _name.c_str() );
-            TextWithTooltip("%s:", _name.c_str(), _info.c_str());
-            //TextWithTooltip("**********##########++++++++++..........", _name.c_str(), _info.c_str());
-            ImGui::SameLine();
-            ImGui::SetCursorPosX(500);
-            ImGui::PushID(_key.c_str());            
-            if (_type == "uint32_t")
+            if (!_type.empty())
             {
-                draw_control<int>(_value, _min_v, _max_v, "%5d", [](int* value, int v_min, int v_max)
-                    {
-                        auto res = ImGui::DragInt("", value, float(v_max - v_min) / 100, v_min, v_max);
-                        return res;
-                    }, _unit.c_str());
+                TextWithTooltip("%s:", _name.c_str(), _info.c_str());
+                ImGui::SameLine();
+                ImGui::SetCursorPosX(500);
+                ImGui::PushID(_key.c_str());
+                if (_type == "uint32_t")
+                {
+                    draw_control<int>(_value, _min_v, _max_v, "%5d", [](int* value, int v_min, int v_max)
+                        {
+                            auto res = ImGui::DragInt("", value, float(v_max - v_min) / 100, v_min, v_max);
+                            return res;
+                        }, _unit.c_str());
 
+                }
+                else if (_type == "float")
+                {
+                    draw_control<float>(_value, _min_v, _max_v, "%5.2f", [](float* value, float v_min, float v_max)
+                        {
+                            auto res = ImGui::DragFloat("", value, (v_max - v_min) / 100, v_min, v_max);
+                            return res;
+                        }, _unit.c_str());
+                }
+                else
+                {
+                    //assert(0 && "unknown type");
+                }
+                ImGui::PopID();
             }
-            else if (_type == "float")
-            {
-                draw_control<float>(_value, _min_v, _max_v, "%5.2f", [](float* value, float v_min, float v_max)
-                    {
-                        auto res = ImGui::DragFloat("", value, (v_max - v_min) / 100, v_min, v_max);
-                        return res;
-                    }, _unit.c_str());
-            }
-            else
-                assert(0 && "unknown type");
-            ImGui::PopID();
-            //ImGui::PopItemWidth();
-            //ImGui::SameLine(); HelpMarker(_info.c_str());
         }
     };
     void serialize(FILE* f, std::string tabs = "")
@@ -470,6 +478,18 @@ int parse_callback(void* userdata, int type, const char* data, uint32_t length)
         {
             nodes_stack.back()->_unit = data;
         }
+        else if (last_key == "hwver")
+        {
+            device_info._hw_ver = data;
+        }
+        else if (last_key == "fwver")
+        {
+            device_info._fw_ver = data;
+        }
+        else if (last_key == "sernum")
+        {
+            device_info._ser_num = data;
+        }
         else
         {
             std::cout << "error parsing unknown last_key: " << last_key << "\n";
@@ -573,6 +593,28 @@ void load_data(TreeItemPtr& root)
 void render_xconf_window()
 {
     ImGui::Begin("XConf");
+
+    ImGui::Text("Device info");
+    ImGui::SameLine();
+    if (ImGui::Button("Load"))
+    {
+        load_data(root);
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Save"))
+    {
+        if (root)
+        {
+            FILE* f = fopen(out_file_name, "w");
+            if (!f)
+                std::cout << "error opening file " << out_file_name << " for writing \n";
+            root->serialize(f);
+            fclose(f);
+        }
+    }
+    ImGui::SameLine();
+    ImGui::Text("Font size:");
+    ImGui::SameLine();
     if (ImGui::Button("-"))
     {
         ImGuiIO& io = ImGui::GetIO();
@@ -596,23 +638,11 @@ void render_xconf_window()
             current_font = font_id;
         }
     }
-    ImGui::SameLine();
-    if (ImGui::Button("Load"))
-    {
-        load_data(root);
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("Save"))
-    {
-        if (root)
-        {
-            FILE* f = fopen(out_file_name, "w");
-            if (!f)
-                std::cout << "error opening file " << out_file_name << " for writing \n";
-            root->serialize(f);
-            fclose(f);
-        }
-    }
+
+    ImGui::Text("hardware version: %s", device_info._hw_ver.c_str());
+    ImGui::Text("firmware version: %s", device_info._fw_ver.c_str());
+    ImGui::Text("serial number: %s",    device_info._ser_num.c_str());
+
     if (root)
         root->draw();
     ImGui::End();
