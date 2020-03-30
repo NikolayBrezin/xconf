@@ -116,22 +116,40 @@ static bool read_serial(std::string& json)
 		    sp_return spr ;
 		    std::cout << "fadec found" << std::endl ;
 		    spr = sp_open(port, SP_MODE_READ_WRITE);
+		    //constexpr char device_echo_disable_command[] = "echo disable\r" ;
+		    //constexpr char device_echo_enable_command[] = "echo enable\r" ;
+		    constexpr char device_read_config_size_command[] = "rcs\r" ;
 		    constexpr char device_read_config_command[] = "rc\r" ;
 
-		    spr = sp_blocking_write(port, device_read_config_command , strlen(device_read_config_command) , 1000);
 
-		    constexpr size_t size = 32*1024;
-		    char buff[size] ;
-		    spr = sp_blocking_read(port, buff, size, 1000);
-		    if ( !spr )
-		      std::cout << "fadec read timeout" << std::endl ;
-		    else
+		    // очистка пайпа
+		    spr = sp_flush(port, SP_BUF_BOTH);
+
+		    // запись команды на чтение размера json/lua конфига
+		    spr = sp_blocking_write(port, device_read_config_size_command , strlen(device_read_config_size_command) , 100);
+
+		    char buff[16] ;
+		    spr = sp_blocking_read(port, buff, 1, 100); // чтение ведущего \r
+		    spr = sp_blocking_read(port, buff, 64, 100);
+		    char* tmp ;
+		    size_t config_size = strtol(buff , &tmp, 10);
+		    if ( tmp == buff )
+		      	std::cout << "read config size fail" << std::endl ;
+		     else
 		      {
-		        std::cout << buff+strlen(device_read_config_command) << std::endl ;
-		        json = ( std::string ( buff )).substr ( strlen(device_read_config_command), 17809 ) ;
+			 std::cout << "config size " << config_size << std::endl ;
+			 // очистка пайпа
+			 spr = sp_flush(port, SP_BUF_BOTH);
+			 // запись команды на чтение размера json/lua конфига
+			 spr = sp_blocking_write(port, device_read_config_command , strlen(device_read_config_command) , 100);
 
-
-
+			 // чтение json/lua конфига
+			 tmp = new char[config_size] ;
+			 spr = sp_blocking_read(port, tmp, 1, 100); // чтение ведущего \r
+			 spr = sp_blocking_read(port, tmp, config_size, 100);
+			 json.assign(tmp,config_size) ;
+			 delete [] tmp ;
+			 spr = sp_flush(port, SP_BUF_BOTH);
 		      }
 
 		    spr = sp_close(port) ;
@@ -559,7 +577,7 @@ int init(GLFWwindow*& window)
 
     ImGui::StyleColorsDark();
     //ImGui::StyleColorsClassic();
-    for (int i = 10; i <= 20; ++i)
+    for (int i = 10; i <= 30; ++i)
         io.Fonts->AddFontFromFileTTF("./data/fonts/DejaVuLGCSansMono.ttf", i, NULL, io.Fonts->GetGlyphRangesCyrillic());
 
     ImFont* font = io.Fonts->Fonts[current_font];
@@ -753,7 +771,6 @@ void load_data(TreeItemPtr& root)
     }
 #else
     std::string json;
-
     if (read_serial(json))
     {
         // сохранение ответа девайса
