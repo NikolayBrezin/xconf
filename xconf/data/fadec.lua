@@ -22,7 +22,8 @@
 					["val"] = 5,
 					["val_min"] = 1,
 					["val_max"] = 100,
-					["val_default"] = 5
+					["val_default"] = 5,
+					["id"] = 0xffffffff
 				},
 
 				["channel2"] = {
@@ -33,7 +34,8 @@
 					["val"] = 10,
 					["val_min"] = 1,
 					["val_max"] = 100,
-					["val_default"] = 10
+					["val_default"] = 10,
+					["id"] = 0xffffffff
 				}
 			},
 			["channel1_tim3"] = {
@@ -46,7 +48,8 @@
 					["val"] = 100,
 					["val_min"] = 0,
 					["val_max"] = 100,
-					["val_default"] = 100
+					["val_default"] = 100,
+					["id"] = 0xffffffff
 				},
 
 				["pwm_min_duty"] = {
@@ -57,7 +60,8 @@
 					["val"] = 0.7,
 					["val_min"] = 0.5,
 					["val_max"] = 1.2,
-					["val_default"] = 0.7
+					["val_default"] = 0.7,
+					["id"] = 0xffffffff
 				},
 
 				["pwm_max_duty"] = {
@@ -68,7 +72,8 @@
 					["val"] = 2.2,
 					["val_min"] = 1.8,
 					["val_max"] = 2.5,
-					["val_default"] = 2.2
+					["val_default"] = 2.2,
+					["id"] = 0xffffffff
 				}
 			},
 
@@ -82,7 +87,8 @@
 					["val"] = 100,
 					["val_min"] = 0,
 					["val_max"] = 100,
-					["val_default"] = 100
+					["val_default"] = 100,
+					["id"] = 0xffffffff
 				},
 
 				["pwm_min_duty"] = {
@@ -93,7 +99,8 @@
 					["val"] = 0.7,
 					["val_min"] = 0.5,
 					["val_max"] = 1.2,
-					["val_default"] = 0
+					["val_default"] = 0,
+					["id"] = 0xffffffff
 				},
 
 				["pwm_max_duty"] = {
@@ -104,7 +111,8 @@
 					["val"] = 2.2,
 					["val_min"] = 1.8,
 					["val_max"] = 2.5,
-					["val_default"] = 0
+					["val_default"] = 0,
+					["id"] = 0xffffffff
 				}
 			},
 
@@ -118,7 +126,8 @@
 					["val"] = 100,
 					["val_min"] = 0,
 					["val_max"] = 100,
-					["val_default"] = 100
+					["val_default"] = 100,
+					["id"] = 0xffffffff
 				}
 			},
 
@@ -132,7 +141,8 @@
 					["val"] = 100,
 					["val_min"] = 0,
 					["val_max"] = 100,
-					["val_default"] = 100
+					["val_default"] = 100,
+					["id"] = 0xffffffff
 				}
 			},
 
@@ -146,7 +156,8 @@
 					["val"] = 100,
 					["val_min"] = 0,
 					["val_max"] = 100,
-					["val_default"] = 0
+					["val_default"] = 0,
+					["id"] = 0xffffffff
 				}
 			}
 		},
@@ -162,7 +173,8 @@
 				["val"] = 1005,
 				["val_min"] = 0,
 				["val_max"] = 0,
-				["val_default"] = 0
+				["val_default"] = 0,
+				["id"] = 0xffffffff
 			},
 
 			["max"] = {
@@ -173,7 +185,8 @@
 				["val"] = 1939,
 				["val_min"] = 0,
 				["val_max"] = 0,
-				["val_default"] = 0
+				["val_default"] = 0,
+				["id"] = 0xffffffff
 			},
 
 			["idle"] = {
@@ -184,7 +197,8 @@
 				["val"] = 1097,
 				["val_min"] = 0,
 				["val_max"] = 0,
-				["val_default"] = 0
+				["val_default"] = 0,
+				["id"] = 0xffffffff
 			}
 		},
 
@@ -199,7 +213,8 @@
 				["val"] = 15,
 				["val_min"] = 0,
 				["val_max"] = 30,
-				["val_default"] = 15
+				["val_default"] = 15,
+				["id"] = 0xffffffff
 			},
 
 			["starter_init_power_level"] = {
@@ -210,7 +225,8 @@
 				["val"] = 20,
 				["val_min"] = 0,
 				["val_max"] = 0,
-				["val_default"] = 0
+				["val_default"] = 0,
+				["id"] = 0xffffffff
 			},
 
 			["starter_init_rpm"] = {
@@ -221,7 +237,8 @@
 				["val"] = 2000,
 				["val_min"] = 1000,
 				["val_max"] = 3000,
-				["val_default"] = 2000
+				["val_default"] = 2000,
+				["id"] = 0xffffffff
 			},
 
 			["fuel_pump_init_power"] = {
@@ -232,7 +249,8 @@
 				["val"] = 5,
 				["val_min"] = 1,
 				["val_max"] = 20,
-				["val_default"] = 5
+				["val_default"] = 5,
+				["id"] = 0xffffffff
 			},
 
 			["fuel_ramp_activated_rpm"] = {
@@ -243,7 +261,8 @@
 				["val"] = 9000,
 				["val_min"] = 6000,
 				["val_max"] = 15000,
-				["val_default"] = 9000
+				["val_default"] = 9000,
+				["id"] = 0xffffffff
 			},
 
 			["fuel_ramp_low_power"] = {
@@ -254,7 +273,8 @@
 				["val"] = 10,
 				["val_min"] = 1,
 				["val_max"] = 30,
-				["val_default"] = 10
+				["val_default"] = 10,
+				["id"] = 0xffffffff
 			},
 
 			["starter_off_rpm"] = {
@@ -265,7 +285,8 @@
 				["val"] = 20000,
 				["val_min"] = 15000,
 				["val_max"] = 25000,
-				["val_default"] = 20000
+				["val_default"] = 20000,
+				["id"] = 0xffffffff
 			},
 
 			["fuel_pump_power_control"] = {
@@ -276,7 +297,8 @@
 				["val"] = 0,
 				["val_min"] = 0,
 				["val_max"] = 0,
-				["val_default"] = 0
+				["val_default"] = 0,
+				["id"] = 0xffffffff
 			},
 
 			["fuel_pump_power_off"] = {
@@ -287,7 +309,8 @@
 				["val"] = 50,
 				["val_min"] = 0,
 				["val_max"] = 0,
-				["val_default"] = 0
+				["val_default"] = 0,
+				["id"] = 0xffffffff
 			},
 
 			["overtemp_duration"] = {
@@ -298,7 +321,8 @@
 				["val"] = 4,
 				["val_min"] = 1,
 				["val_max"] = 5,
-				["val_default"] = 0
+				["val_default"] = 0,
+				["id"] = 0xffffffff
 			},
 
 			["fuel_pump_pid_kp"] = {
@@ -309,7 +333,8 @@
 				["val"] = 0.001,
 				["val_min"] = 0,
 				["val_max"] = 0,
-				["val_default"] = 0
+				["val_default"] = 0,
+				["id"] = 0xffffffff
 			},
 
 			["fuel_pump_pid_ki"] = {
@@ -320,7 +345,8 @@
 				["val"] = 0.001,
 				["val_min"] = 0,
 				["val_max"] = 0,
-				["val_default"] = 0
+				["val_default"] = 0,
+				["id"] = 0xffffffff
 			},
 
 			["fuel_pump_pid_kd"] = {
@@ -331,7 +357,8 @@
 				["val"] = 0.0002,
 				["val_min"] = 0,
 				["val_max"] = 0,
-				["val_default"] = 0
+				["val_default"] = 0,
+				["id"] = 0xffffffff
 			},
 
 			["fuel_pump_pid_start_kp"] = {
@@ -342,7 +369,8 @@
 				["val"] = 5e-6,
 				["val_min"] = 0,
 				["val_max"] = 0,
-				["val_default"] = 0
+				["val_default"] = 0,
+				["id"] = 0xffffffff
 			},
 
 			["fuel_pump_pid_start_ki"] = {
@@ -353,7 +381,8 @@
 				["val"] = 0,
 				["val_min"] = 0,
 				["val_max"] = 0,
-				["val_default"] = 0
+				["val_default"] = 0,
+				["id"] = 0xffffffff
 			},
 
 			["starter_pid_kp"] = {
@@ -364,7 +393,8 @@
 				["val"] = 0.004,
 				["val_min"] = 0,
 				["val_max"] = 0,
-				["val_default"] = 0
+				["val_default"] = 0,
+				["id"] = 0xffffffff
 			},
 
 			["starter_pid_ki"] = {
@@ -375,7 +405,8 @@
 				["val"] = 0.002,
 				["val_min"] = 0,
 				["val_max"] = 0,
-				["val_default"] = 0
+				["val_default"] = 0,
+				["id"] = 0xffffffff
 			},
 
 			["starter_pid_kd"] = {
@@ -386,7 +417,8 @@
 				["val"] = 0.0001,
 				["val_min"] = 0,
 				["val_max"] = 0,
-				["val_default"] = 0
+				["val_default"] = 0,
+				["id"] = 0xffffffff
 			},
 
 			["fuel_pump_35000"] = {
@@ -397,7 +429,8 @@
 				["val"] = 10,
 				["val_min"] = 1,
 				["val_max"] = 30,
-				["val_default"] = 10
+				["val_default"] = 10,
+				["id"] = 0xffffffff
 			},
 
 			["rc_out"] = {
@@ -408,7 +441,8 @@
 				["val"] = -1,
 				["val_min"] = 0,
 				["val_max"] = 0,
-				["val_default"] = 0
+				["val_default"] = 0,
+				["id"] = 0xffffffff
 			},
 
 			["starter_idle_power"] = {
@@ -419,7 +453,8 @@
 				["val"] = 10,
 				["val_min"] = 0,
 				["val_max"] = 0,
-				["val_default"] = 0
+				["val_default"] = 0,
+				["id"] = 0xffffffff
 			},
 
 			["rotor_rpm"] = {
@@ -430,7 +465,8 @@
 				["val"] = 0,
 				["val_min"] = 0,
 				["val_max"] = 0,
-				["val_default"] = 0
+				["val_default"] = 0,
+				["id"] = 0xffffffff
 			},
 
 			["on_delta"] = {
@@ -441,7 +477,8 @@
 				["val"] = 100,
 				["val_min"] = 0,
 				["val_max"] = 0,
-				["val_default"] = 0
+				["val_default"] = 0,
+				["id"] = 0xffffffff
 			},
 
 			["off_delta"] = {
@@ -452,7 +489,8 @@
 				["val"] = 100,
 				["val_min"] = 0,
 				["val_max"] = 0,
-				["val_default"] = 0
+				["val_default"] = 0,
+				["id"] = 0xffffffff
 			},
 
 			["on_off_control_out"] = {
@@ -463,7 +501,8 @@
 				["val"] = 5,
 				["val_min"] = 0,
 				["val_max"] = 0,
-				["val_default"] = 0
+				["val_default"] = 0,
+				["id"] = 0xffffffff
 			},
 
 			["on_off_duration"] = {
@@ -474,7 +513,8 @@
 				["val"] = 12,
 				["val_min"] = 0,
 				["val_max"] = 0,
-				["val_default"] = 0
+				["val_default"] = 0,
+				["id"] = 0xffffffff
 			},
 
 			["rotor_slew_rate"] = {
@@ -485,7 +525,8 @@
 				["val"] = 10000,
 				["val_min"] = 0,
 				["val_max"] = 0,
-				["val_default"] = 0
+				["val_default"] = 0,
+				["id"] = 0xffffffff
 			},
 
 			["fuel_valve_pwm"] = {
@@ -496,7 +537,8 @@
 				["val"] = 100,
 				["val_min"] = 0,
 				["val_max"] = 0,
-				["val_default"] = 0
+				["val_default"] = 0,
+				["id"] = 0xffffffff
 			}
 		}
 	}

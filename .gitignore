@@ -3,8 +3,9 @@
 /xconf/xconf.vcxproj.filters
 /xconf/xconf.vcxproj.user
 /xconf/imgui.ini
-/xconf/data/out.json
-/xconf/data/fadec.json
+/xconf/data/device_read.json
+/xconf/data/device_write.json
+/xconf/data/test.json
 /xconf/imgui/*.o
 /xconf/json/*.o
 /xconf/gl3w/*.o
