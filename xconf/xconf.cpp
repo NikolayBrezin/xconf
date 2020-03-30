@@ -38,6 +38,7 @@ GLFWwindow* window = nullptr;
 static int current_font = 5;
 ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 bool show_demo_window = false;
+static std::string port_name = "" ;
 
 struct TreeItem;
 using TreeItemPtr = std::shared_ptr<TreeItem>;
@@ -68,7 +69,7 @@ static bool read_serial(std::string& json)
     {
   	struct sp_port *port = port_list[i];
 
-  	std::cout<<"port: " << sp_get_port_name(port) << std::endl;
+  	std::cout<< sp_get_port_name(port) << std::endl;
   	std::cout<<"\t: " << sp_get_port_description(port) << std::endl;
 
 
@@ -113,6 +114,9 @@ static bool read_serial(std::string& json)
 	(true)
 #endif		    
 		{
+		    port_name = sp_get_port_name(port) ;
+
+
 		    sp_return spr ;
 		    std::cout << "fadec found" << std::endl ;
 		    spr = sp_open(port, SP_MODE_READ_WRITE);
@@ -120,6 +124,8 @@ static bool read_serial(std::string& json)
 		    //constexpr char device_echo_enable_command[] = "echo enable\r" ;
 		    constexpr char device_read_config_size_command[] = "rcs\r" ;
 		    constexpr char device_read_config_command[] = "rc\r" ;
+
+
 
 
 		    // очистка пайпа
@@ -180,6 +186,43 @@ static bool read_serial(std::string& json)
 
    return false ;
 
+}
+
+
+static bool write_serial(std::string& port_name, std::string json)
+{
+  sp_return spr ;
+  struct sp_port *port ;
+
+  std::cout << "write JSON config to device ..." ;
+
+  if ( (spr = sp_get_port_by_name(port_name.c_str(), &port )))
+      {std::cout << "\tport " << port_name << "not found" << std::endl ; return false;  }
+
+
+
+
+  if ( (spr = sp_open(port, SP_MODE_WRITE)))
+    {std::cout << "\tport " << port_name << " open fail" << std::endl ; return false;  }
+
+  std::string device_write_config_command = "wc " + json + "\r";
+
+
+  // очистка пайпа
+  if ( (spr = sp_flush(port, SP_BUF_OUTPUT)))
+    {std::cout << "\tsp_flush "<< port_name << " fail" << std::endl ; return false; sp_close(port) ;  }
+
+  // запись команды на запись json/lua конфига
+  spr = sp_blocking_write(port, device_write_config_command.c_str() , device_write_config_command.size() , 100);
+
+  if ( spr < 0  )
+    {std::cout << "\sp_blocking_write "<< port_name << " fail" << std::endl ; return false; sp_close(port) ; }
+
+  spr = sp_close(port) ;
+
+  std::cout << "ок" << std::endl ;
+
+  return true ;
 }
 
 static void HelpMarker(const char* desc)
@@ -771,6 +814,7 @@ void load_data(TreeItemPtr& root)
     }
 #else
     std::string json;
+    nodes_stack.clear();
     if (read_serial(json))
     {
         // сохранение ответа девайса
@@ -820,6 +864,14 @@ void save_data(TreeItemPtr& root)
 	{
 	   std::cout << "error opening file " << device_write_file_name << " for writing \n";
 	}
+
+      // обезжиривание json \r и \n
+      std::string json = s.str() ;
+      json.erase(std::remove(json.begin(), json.end(), '\r') , json.end());
+      json.erase(std::remove(json.begin(), json.end(), '\n'), json.end());
+      //json.erase(std::remove(json.begin(), json.end(), ' '), json.end());  // могут быть в тексте подсказок и названий нодов
+      //json.erase(std::remove(json.begin(), json.end(), '\t'), json.end()); // могут быть в тексте подсказок и названий нодов
+      write_serial(port_name, json.c_str()) ;
 
     }
 }
