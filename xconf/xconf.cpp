@@ -31,8 +31,9 @@
 
 const char* glsl_version = "#version 130";
 
-std::string data_file_name = "./data/fadec.json";
-const char* out_file_name = "./data/out.json";
+std::string test_json_file_name = "./data/test.json";
+const char* device_read_file_name = "./data/device_read.json";
+const char* device_write_file_name = "./data/device_write.json";
 GLFWwindow* window = nullptr;
 static int current_font = 5;
 ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -127,18 +128,9 @@ static bool read_serial(std::string& json)
 		    else
 		      {
 		        std::cout << buff+strlen(device_read_config_command) << std::endl ;
-		        json = ( std::string ( buff )).substr ( strlen(device_read_config_command), 16798 ) ;
+		        json = ( std::string ( buff )).substr ( strlen(device_read_config_command), 17809 ) ;
 
-		        // сохранения ответа девайса
-		        std::cout << "save device JSON config to file " << out_file_name << "\n";
-		        std::ofstream output(out_file_name);
-		        if (!output)
-		            std::cout << "error opening file " << out_file_name << " for writing \n";
-		        if(!output.is_open())
-		            std::cout << "error opening file " << data_file_name << " for writing \n";
 
-		        output<<json ;
-		        output.close();
 
 		      }
 
@@ -212,6 +204,7 @@ struct TreeItem
     std::string _info;
     std::string _type;
     std::string _unit;
+    std::string _id;
 
     std::any _value;
     std::any _min_v;
@@ -374,6 +367,7 @@ struct TreeItem
                 {
                     out_data<std::string>(s, tabs_, true);
                 }
+		s << tabs_ << "\"id\": \""    << _id << "\",\n";
             }
             s << tabs << "}";
         }
@@ -657,6 +651,10 @@ int parse_callback(void* userdata, int type, const char* data, uint32_t length)
         {
             nodes_stack.back()->_val_default = std::string(data);
         }
+	else if (last_key == "id")
+	{
+	    nodes_stack.back()->_id = std::string(data);
+	}
         else
         {
             std::cout << "error parsing unknown last_key: " << last_key << "\n";
@@ -733,12 +731,12 @@ void load_data(TreeItemPtr& root)
         fprintf(stderr, "something wrong happened during init\n");
     }
 #if 0
-    std::cout << "load JSON config from file " << data_file_name << "\n";
-    std::ifstream input(data_file_name);
+    std::cout << "load JSON config from file " << test_json_file_name << "\n";
+    std::ifstream input(test_json_file_name);
     if (!input)
-        std::cout << "error opening file " << data_file_name << " for reading \n";
+        std::cout << "error opening file " << test_json_file_name << " for reading \n";
     if(!input.is_open())
-        std::cout << "error opening file " << data_file_name << " for reading \n";
+        std::cout << "error opening file " << test_json_file_name << " for reading \n";
 
     int counter = 1;
     while (input)
@@ -758,9 +756,19 @@ void load_data(TreeItemPtr& root)
 
     if (read_serial(json))
     {
-        std::ofstream out(data_file_name);
-        out << json;
-        out.close();
+        // сохранение ответа девайса
+	std::cout << "save readed device JSON config to file " << device_read_file_name << "\n";
+	std::ofstream output(device_read_file_name);
+	if(output.is_open())
+	{
+	  output<<json ;
+	  output.close(); 
+ 	}
+	else
+	{
+	  std::cout << "error opening file " << device_read_file_name << " for writing \n";
+	}
+
         if (json_parser_string(&parser, json.c_str(), (uint32_t)json.size(), nullptr))
         {
             std::cout << "device json data parsing error, see dump /data/in.json" << std::endl;
@@ -782,14 +790,20 @@ void save_data(TreeItemPtr& root)
         s << "{\n";
         root->serialize(s);
         s << "}\n";
-        std::ofstream out_file(out_file_name);
-        if (!out_file)
-            std::cout << "error opening file " << out_file_name << " for writing \n";
-        else
-        {
-            out_file << s.str();
-            out_file.close();
-        }
+        
+        // сохранения отредактированого JSON девайса
+        std::cout << "save writed device JSON config to file " << device_write_file_name << "\n";
+        std::ofstream output(device_write_file_name);
+        if(output.is_open())
+	{
+	  output << s.str();
+          output.close();
+	}
+	else
+	{
+	   std::cout << "error opening file " << device_write_file_name << " for writing \n";
+	}
+
     }
 }
 
