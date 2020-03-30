@@ -50,3 +50,6 @@
 /xconf/*.project
 /xconf/.cproject
 /.metadata
+/test_lua/.dep
+/test_lua/*.exe
+/test_lua/*.o
