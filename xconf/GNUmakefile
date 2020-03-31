@@ -11,7 +11,7 @@ BUILD_TIME=$(shell date +%H%M%S)
 DEBUG=-g3 -ggdb
 
 APP_NAME=xconf
-APP_LIBS= json/libjson.a imgui/libimgui.a
+APP_LIBS= imgui/libimgui.a
 
 
 
@@ -31,9 +31,9 @@ else
 endif
 
 CFLAGS= -std=gnu2x $(COMPILE_FLAGS)
-CXXFLAGS= -std=gnu++2a $(COMPILE_FLAGS)  -I. -Ijson -Igl3w -Iimgui  -DIMGUI_IMPL_OPENGL_LOADER_GL3W 
+CXXFLAGS= -std=gnu++2a $(COMPILE_FLAGS)  -I. -Iimgui  -DIMGUI_IMPL_OPENGL_LOADER_GL3W 
 
-LIBS =-lglfw3 -lgl3w -lserialport
+LIBS =-ljson -lglfw3 -lgl3w -lserialport
 
 
 
@@ -86,7 +86,7 @@ build_info:
 	@echo host system  ... $(HOST)
 
 clean:
-	rm -fr $(BIN) $(APP_LIBS) $(APP_OBJ) $(JSON_OBJS) $(GL3W_OBJS) $(IMGUI_OBJS) .dep
+	rm -fr $(BIN) $(APP_LIBS) $(APP_OBJ) $(IMGUI_OBJS) .dep
 
 strip:
 	$(STRIP) $(BIN)
@@ -102,33 +102,7 @@ strip:
 
 
 
-# ------------------------- json -------------------------
-JSON_SRCS=	json/json.c 
-JSON_OBJS = $(addsuffix .o, $(basename $(JSON_SRCS)))
-
-json/libjson.a:$(JSON_OBJS)
-	$(AR) -cru $@ $(JSON_OBJS)
-	$(RANLIB) $@
-#--------------------------------------------------------------
-
-
-
-
-
-# ------------------------- gl3w -------------------------
-GL3W_SRCS=	gl3w/gl3w.c 
-GL3W_OBJS = $(addsuffix .o, $(basename $(GL3W_SRCS)))
-
-gl3w/libgl3w.a:$(GL3W_OBJS)
-	$(AR) -cru $@ $(GL3W_OBJS)
-	$(RANLIB) $@
-#--------------------------------------------------------------
-
-
-
-
-
-# ------------------------- ingui ----------------------------
+# ------------------------- imgui ----------------------------
 IMGUI_SRCS=	imgui/imgui.cpp \
 		imgui/imgui_demo.cpp \
 		imgui/imgui_draw.cpp \
