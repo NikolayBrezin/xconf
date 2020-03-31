@@ -1,0 +1,551 @@
+{
+ "fadec": 
+  {
+    "name": "Электронно-цифровая система управления двигателем (ЭСУД) с полной ответственностью",
+    "dev_info":
+      {
+       "name": "информация об устройстве",
+       "hwver": 
+        {
+          "name": "версия аппаратного обеспечения",
+          "info": "",
+          "typeof": "const_string",
+          "unit": "",
+          "val": "v0.0, эмулятр устройства fadec",
+          "val_min": "",
+          "val_max": "",
+          "val_default": "",
+          "id":"0xffffffff"
+        },
+       "fwver": 
+        {
+          "name": "версия встроенного програмного обеспечения",
+          "info": "",
+          "typeof": "const_string",
+          "unit": "",
+          "val": "v0.0, отладочный код для эмулятора утсройсва fadec",
+          "val_min": "",
+          "val_max": "",
+          "val_default": "",
+          "id":"0xffffffff"
+        },
+       "sernum": 
+        {
+          "name": "серийный номер(уникальный id)",
+          "info": "",
+          "typeof": "const_string",
+          "unit": "",
+          "val": "1Б45.0012",
+          "val_min": "",
+          "val_max": "",
+          "val_default": "",
+          "id":"0xffffffff"
+        }
+       },
+    "control": 
+	{
+      "name": "управление",
+      "slew_rate": {
+        "name": "скорость нарастания",
+
+        "channel1": 
+        {
+          "name": "cкорость нарастания стартера (канал 1)",
+          "info": "Параметр определяет скорость раскрутки ротора во время разгона двигателя до холостых оборотов",
+          "typeof": "float",
+          "unit": "[%/c]",
+          "val": 5,
+          "val_min": 1,
+          "val_max": 100,
+          "val_default": 5,
+          "id":"0xffffffff"
+        },
+
+        "channel2": {
+          "name": "скорость нарастания топливной помпы(канал 2)",
+          "info": "Параметр определяет скорость нарастания и убывания оборотов ротора в диапазоне от холостых до максимальных оборотов",
+          "typeof": "float",
+          "unit": "[%/c]",
+          "val": 10,
+          "val_min": 1,
+          "val_max": 100,
+          "val_default": 10,
+          "id":"0xffffffff"
+        }
+      },
+      "channel1_tim3": {
+        "name": "Канал 1 (TIM3)",
+        "pwm_freq": {
+          "name": "частота ШИМ",
+          "info": "Параметр определяет частоту включения и отключения стартера",
+          "typeof": "uint32_t",
+          "unit": "[Гц]",
+          "val": 100,
+          "val_min": 0,
+          "val_max": 100,
+          "val_default": 100,
+          "id":"0xffffffff"
+        },
+
+        "pwm_min_duty": {
+          "name": "минимальная скважность ШИМ",
+          "info": "Параметр определяет минимальную границу чувствительности управляющего сигнала на регулятор оборотов стартера",
+          "typeof": "float",
+          "unit": "[мс]",
+          "val": 0.7,
+          "val_min": 0.5,
+          "val_max": 1.2,
+          "val_default": 0.7,
+          "id":"0xffffffff"
+        },
+
+        "pwm_max_duty": {
+          "name": "максимальная скважность ШИМ",
+          "info": "Параметр определяет максимальную границу чувствительности управляющего сигнала на регулятор оборотов стартера",
+          "typeof": "float",
+          "unit": "[мс]",
+          "val": 2.2,
+          "val_min": 1.8,
+          "val_max": 2.5,
+          "val_default": 2.2,
+          "id":"0xffffffff"
+        }
+      },
+
+      "channel2_tim3": {
+        "name": "Канал 2 (TIM3)",
+        "pwm_freq": {
+          "name": "частота ШИМ",
+          "info": "Параметр определяет частоту включения и отключения топливной помпы",
+          "typeof": "uint32_t",
+          "unit": "[Гц]",
+          "val": 100,
+          "val_min": 0,
+          "val_max": 100,
+          "val_default": 100,
+          "id":"0xffffffff"
+        },
+
+        "pwm_min_duty": {
+          "name": "минимальная скважность ШИМ",
+          "info": "Параметр определяет минимальную границу чувствительности управляющего сигнала на регулятор оборотов топливной помпы",
+          "typeof": "float",
+          "unit": "[мс]",
+          "val": 0.7,
+          "val_min": 0.5,
+          "val_max": 1.2,
+          "val_default": 0,
+          "id":"0xffffffff"
+        },
+		"pwm_max_duty": {
+          "name": "максимальная скважность ШИМ",
+          "info": "Параметр определяет максимальную границу чувствительности управляющего сигнала на регулятор оборотов топливной помпы",
+          "typeof": "float",
+          "unit": "[мс]",
+          "val": 2.2,
+          "val_min": 1.8,
+          "val_max": 2.5,
+          "val_default": 0,
+          "id":"0xffffffff"
+        }
+      },
+
+      "channel3_tim4": {
+        "name": "Канал 3 (TIM4)",
+        "pwm_freq": {
+          "name": " частота ШИМ",
+          "info": "Параметр определяет частоту включения и отключения клапана подачи топлива розжига камеры сгорания",
+          "typeof": "uint32_t",
+          "unit": "[Гц]",
+          "val": 100,
+          "val_min": 0,
+          "val_max": 100,
+          "val_default": 100,
+          "id":"0xffffffff"
+        }
+      }
+    },
+	"mesurenment": 
+	{
+		"name": "измерения",
+
+		"min": {
+			"name": "min",
+			"info": "Параметр определяет границу сигнала отключения реактивного двигателя",
+			"typeof": "uint32_t",
+			"unit": "[мкс]",
+			"val": 1005,
+			"val_min": 0,
+			"val_max": 0,
+			"val_default": 0,
+			"id":"0xffffffff"
+		},
+
+		"max": {
+			"name": "max",
+			"info": "Параметр определяет верхнюю границу сигнала управления оборотами реактивного двигателя",
+			"typeof": "uint32_t",
+			"unit": "[мкс]",
+			"val": 1939,
+			"val_min": 0,
+			"val_max": 0,
+			"val_default": 0,
+			"id":"0xffffffff"
+		},
+
+		"idle": {
+			"name": "idle",
+			"info": "Параметр определяет нижнюю границу сигнала управления оборотами реактивного двигателя",
+			"typeof": "uint32_t",
+			"unit": "[мкс]",
+			"val": 1097,
+			"val_min": 0,
+			"val_max": 0,
+			"val_default": 0,
+			"id":"0xffffffff"
+		}
+	},
+
+	"engine": 
+	{
+		"name": "трд",
+
+		"glow_plug_time": {
+			"name": "время накаливания свечи",
+			"info": "Параметр определяет время накаливания свечи с момента команды старт до подачи топлива",
+			"typeof": "uint32_t",
+			"unit": "[c]",
+			"val": 15,
+			"val_min": 0,
+			"val_max": 30,
+			"val_default": 15,
+			"id":"0xffffffff"
+		},
+
+		"starter_init_power_level": {
+			"name": "начальная мощность стартера",
+			"info": "Не помню для чего это",
+			"typeof": "uint32_t",
+			"unit": "[%]",
+			"val": 20,
+			"val_min": 0,
+			"val_max": 0,
+			"val_default": 0,
+			"id":"0xffffffff"
+		},
+
+		"starter_init_rpm": {
+			"name": "начальные обороты стартера",
+			"info": "Параметр определяет обороты ротора реактивного двигателя на этапе поджига топливной смеси",
+			"typeof": "uint32_t",
+			"unit": "[об/мин]",
+			"val": 2000,
+			"val_min": 1000,
+			"val_max": 3000,
+			"val_default": 2000,
+			"id":"0xffffffff"
+		},
+
+		"fuel_pump_init_power": {
+			"name": "начальная мощность помпы",
+			"info": "Параметр определяет минимальную подачу топлива на этапе поджига топливной смеси",
+			"typeof": "float",
+			"unit": "[%]",
+			"val": 5,
+			"val_min": 1,
+			"val_max": 20,
+			"val_default": 5,
+			"id":"0xffffffff"
+		},
+
+		"fuel_ramp_activated_rpm": {
+			"name": "обороты открытия основной рампы",
+			"info": "Параметр определяет обороты подачи топлива из основной топливной рампы на этапе разгона реактивного двигателя",
+			"typeof": "uint32_t",
+			"unit": "[об/мин]",
+			"val": 9000,
+			"val_min": 6000,
+			"val_max": 15000,
+			"val_default": 9000,
+			"id":"0xffffffff"
+		},
+
+		"fuel_ramp_low_power": {
+			"name": "мощность помпы на режиме разгона",
+			"info": "Параметр определяет подачу топлива при включении основной топливной рампы на этапе разго реактивного двигателя",
+			"typeof": "float",
+			"unit": "[%]",
+			"val": 10,
+			"val_min": 1,
+			"val_max": 30,
+			"val_default": 10,
+			"id":"0xffffffff"
+		},
+
+		"starter_off_rpm": {
+			"name": "обороты отключения стартера",
+			"info": "Параметр определяет обороты отключения стартера на этапе разгона",
+			"typeof": "uint32_t",
+			"unit": "[об/мин]",
+			"val": 20000,
+			"val_min": 15000,
+			"val_max": 25000,
+			"val_default": 20000,
+			"id":"0xffffffff"
+		},
+
+		"fuel_pump_power_control": {
+			"name": "мощность помпы (управление)",
+			"info": "Этот параметр скорей всего не используется",
+			"typeof": "uint32_t",
+			"unit": "[%]",
+			"val": 0,
+			"val_min": 0,
+			"val_max": 0,
+			"val_default": 0,
+			"id":"0xffffffff"
+		},
+
+		"fuel_pump_power_off": {
+			"name": "мощность помпы (остановка)",
+			"info": "Этот параметр скорей всего не используется",
+			"typeof": "uint32_t",
+			"unit": "[%]",
+			"val": 50,
+			"val_min": 0,
+			"val_max": 0,
+			"val_default": 0,
+			"id":"0xffffffff"
+		},
+
+		"overtemp_duration": {
+			"name": "время превышения температуры",
+			"info": "Параметр определяет время превышения максимальной температуры газов до отключения реактивного двигателя",
+			"typeof": "uint32_t",
+			"unit": "[c]",
+			"val": 4,
+			"val_min": 1,
+			"val_max": 5,
+			"val_default":0,
+			"id":"0xffffffff"
+		},
+
+		"fuel_pump_pid_kp": {
+			"name": "Kp помпы",
+			"info": "Параметр определяет Kp топливной помпы на режиме от минимальных до максимальных оборотов ротора реактивного двигателя",
+			"typeof": "float",
+			"unit": "[]",
+			"val": 0.001,
+			"val_min": 0,
+			"val_max": 0,
+			"val_default":0,
+			"id":"0xffffffff"
+		},
+
+		"fuel_pump_pid_ki": {
+			"name": "Ki помпы",
+			"info": "Параметр определяет Ki топливной помпы на режиме от минимальных до максимальных оборотов ротора реактивного двигателя",
+			"typeof": "float",
+			"unit": "[]",
+			"val": 0.001,
+			"val_min": 0,
+			"val_max": 0,
+			"val_default":0,
+			"id":"0xffffffff"
+		},
+
+		"fuel_pump_pid_kd": {
+			"name": "Kd помпы",
+			"typeof": "float",
+			"info": "Параметр определяет Kd топливной помпы на режиме от минимальных до максимальных оборотов ротора реактивного двигателя",
+			"unit": "[]",
+			"val": 0.0002,
+			"val_min": 0,
+			"val_max": 0,
+			"val_default":0,
+			"id":"0xffffffff"
+		},
+
+		"fuel_pump_pid_start_kp": {
+			"name": "Kp помпы(старт)",
+			"info": "Параметр определяет Kp топливной помпы на режиме разгона реактивного двигателя",
+			"typeof": "float",
+			"unit": "[]",
+			"val": 5e-6,
+			"val_min": 0,
+			"val_max": 0,
+			"val_default":0,
+			"id":"0xffffffff"
+		},
+
+		"fuel_pump_pid_start_ki": {
+			"name": "Ki помпы(старт)",
+			"info": "Параметр определяет Ki топливной помпы на режиме разгона реактивного двигателя",
+			"typeof": "float",
+			"unit": "[]",
+			"val": 0,
+			"val_min": 0,
+			"val_max": 0,
+			"val_default":0,
+			"id":"0xffffffff"
+		},
+
+		"starter_pid_kp": {
+			"name": "Kp стартера",
+			"info": "Параметр определяет Kp стартера на режиме поджига топливной смеси",
+			"typeof": "float",
+			"unit": "[]",
+			"val": 0.004,
+			"val_min": 0,
+			"val_max": 0,
+			"val_default":0,
+			"id":"0xffffffff"
+		},
+
+		"starter_pid_ki": {
+			"name": "Ki стартера",
+			"info": "Параметр определяет Ki стартера на режиме поджига топливной смеси",
+			"typeof": "float",
+			"unit": "[]",
+			"val": 0.002,
+			"val_min": 0,
+			"val_max": 0,
+			"val_default":0,
+			"id":"0xffffffff"
+		},
+
+		"starter_pid_kd": {
+			"name": "Kd стартера",
+			"typeof": "float",
+			"info": "Параметр определяет Kd стартера на режиме поджига топливной смеси",
+			"unit": "[]",
+			"val": 0.0001,
+			"val_min": 0,
+			"val_max": 0,
+			"val_default":0,
+			"id":"0xffffffff"
+		},
+
+		"fuel_pump_35000": {
+			"name": "мощн. помпы ожидания 35000[%]",
+			"info": "Параметр определяет мощность топливной помпы на режиме разгона до холостых оборотов",
+			"typeof": "float",
+			"unit": "[]",
+			"val": 10,
+			"val_min": 1,
+			"val_max": 30,
+			"val_default":10,
+			"id":"0xffffffff"
+		},
+
+		"rc_out": {
+			"name": "выход футабы",
+			"info": "Параметр отображает входящий управляющий сигнал реактивным двигателем",
+			"typeof": "float",
+			"unit": "[]",
+			"val": -1,
+			"val_min": 0,
+			"val_max": 0,
+			"val_default":0,
+			"id":"0xffffffff"
+		},
+
+		"starter_idle_power": {
+			"name": "мощн. стартера охлаж[%]",
+			"info": "Параметр определяет мощность стартера на режиме охлаждения реактивного двигателя",
+			"typeof": "uint32_t",
+			"unit": "[]",
+			"val": 10,
+			"val_min": 0,
+			"val_max": 0,
+			"val_default":0,
+			"id":"0xffffffff"
+		},
+
+		"rotor_rpm": {
+			"name": "частота ротора",
+			"info": "Параметр отображает текущие обороты ротора реактивного двигателя",
+			"typeof": "float",
+			"unit": "[]",
+			"val": 0,
+			"val_min": 0,
+			"val_max": 0,
+			"val_default":0,
+			"id":"0xffffffff"
+		},
+
+		"on_delta": {
+			"name": "ONOFF: Дельта включения",
+			"info": "TODO инфа по использованию параметра",
+			"typeof": "float",
+			"unit": "[]",
+			"val": 100,
+			"val_min": 0,
+			"val_max": 0,
+			"val_default":0,
+			"id":"0xffffffff"
+		},
+
+		"off_delta": {
+			"name": "ONOFF: Дельта отключения",
+			"info": "TODO инфа по использованию параметра",
+			"typeof": "float",
+			"unit": "[]",
+			"val": 100,
+			"val_min": 0,
+			"val_max": 0,
+			"val_default":0,
+			"id":"0xffffffff"
+		},
+
+		"on_off_control_out": {
+			"name": "ONOFF: Выход регулятора",
+			"info": "TODO инфа по использованию параметра",
+			"typeof": "float",
+			"unit": "[]",
+			"val": 5,
+			"val_min": 0,
+			"val_max": 0,
+			"val_default":0,
+			"id":"0xffffffff"
+		},
+
+		"on_off_duration": {
+			"name": "ONOFF: Время",
+			"info": "TODO инфа по использованию параметра",
+			"typeof": "uint32_t",
+			"unit": "[]",
+			"val": 12,
+			"val_min": 0,
+			"val_max": 0,
+			"val_default":0,
+			"id":"0xffffffff"
+		},
+
+		"rotor_slew_rate": {
+			"name": "скорость нарастания [об/c] RC",
+			"info": "Параметр определяет скорость нарастания и убывания оборотов ротора реактивного двигателя при внешнем управлении",
+			"typeof": "float",
+			"unit": "[об/с]",
+			"val": 10000,
+			"val_min": 0,
+			"val_max": 0,
+			"val_default":0,
+			"id":"0xffffffff"
+		},
+
+		"fuel_valve_pwm": {
+			"name": "ШИМ клапанов",
+			"info": "Параметр определяет начальную частоту открытия и закрытия клапанов на режиме поджига топливной смеси и разгона реактивного двигателя",
+			"typeof": "float",
+			"unit": "[]",
+			"val": 100,
+			"val_min": 0,
+			"val_max": 0,
+			"val_default":0,
+			"id":"0xffffffff"
+		}
+	}
+	
+  }  
+}
