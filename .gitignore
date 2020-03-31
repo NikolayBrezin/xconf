@@ -5,7 +5,6 @@
 /xconf/imgui.ini
 /xconf/data/device_read.json
 /xconf/data/device_write.json
-/xconf/data/test.json
 /xconf/imgui/*.o
 /xconf/json/*.o
 /xconf/gl3w/*.o
@@ -41,10 +40,6 @@
 /xconf/.settings/org.eclipse.cdt.codan.core.prefs
 /xconf/.settings/org.eclipse.cdt.core.prefs
 /xconf/.settings/org.eclipse.cdt.ui.prefs
-
-
-
-
 
 /xconf/.settings
 /xconf/*.project
