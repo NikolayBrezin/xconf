@@ -8,9 +8,7 @@ BUILD_DATE_STR="\"$(shell date +%Y%m%d:%H:%M:%S)"\"
 BUILD_DATE=$(shell date +%Y%m%d)
 BUILD_TIME=$(shell date +%H%M%S)
 
-#DEBUG=-g3 -ggdb
-
-
+DEBUG=-g3 -ggdb
 
 APP_NAME=xconf
 APP_LIBS= json/libjson.a imgui/libimgui.a
