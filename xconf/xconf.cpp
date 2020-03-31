@@ -13,14 +13,16 @@
 #include <sstream>
 #include <stdio.h>
 
+#include <GL/gl3w.h>
+#include <GLFW/glfw3.h>
+#include <libserialport.h>
+
 #include "json.h"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
-#include "gl3w/gl3w.h"            // Initialize with gl3wInit()
-#include <GLFW/glfw3.h>
-#include <libserialport.h>
+
 
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
@@ -595,7 +597,7 @@ int init(GLFWwindow*& window)
         return 1;
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
     //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
 
@@ -605,12 +607,17 @@ int init(GLFWwindow*& window)
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // Enable vsync
 
-    bool err = gl3wInit() != 0;
-    if (err)
-    {
-        fprintf(stderr, "Failed to initialize OpenGL loader!\n");
-        return 1;
-    }
+    if (gl3wInit()) 
+       {
+      	 fprintf(stderr, "failed to initialize OpenGL\n");
+      	 return -1;
+      	}
+      	if (!gl3wIsSupported(3, 2)) {
+      	 fprintf(stderr, "OpenGL 3.2 not supported\n");
+      	 return -1;
+      	}
+      	printf("OpenGL %s, GLSL %s\n", glGetString(GL_VERSION),
+      	       glGetString(GL_SHADING_LANGUAGE_VERSION));
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();

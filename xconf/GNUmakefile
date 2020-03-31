@@ -8,17 +8,17 @@ BUILD_DATE_STR="\"$(shell date +%Y%m%d:%H:%M:%S)"\"
 BUILD_DATE=$(shell date +%Y%m%d)
 BUILD_TIME=$(shell date +%H%M%S)
 
-
+#DEBUG=-g3 -ggdb
 
 
 
 APP_NAME=xconf
-APP_LIBS= json/libjson.a gl3w/libgl3w.a imgui/libimgui.a
+APP_LIBS= json/libjson.a imgui/libimgui.a
 
 
 
 LTO ?= no
-COMPILE_FLAGS = -g3 -ggdb -Wall -Wformat -ffunction-sections -fdata-sections -Wp,-M,-MP,-MT,$@,-MF,.dep/$(@F).dep
+COMPILE_FLAGS = $(DEBUG) -Wall -Wformat -ffunction-sections -fdata-sections -Wp,-M,-MP,-MT,$@,-MF,.dep/$(@F).dep
 
 
 
@@ -35,7 +35,7 @@ endif
 CFLAGS= -std=gnu2x $(COMPILE_FLAGS)
 CXXFLAGS= -std=gnu++2a $(COMPILE_FLAGS)  -I. -Ijson -Igl3w -Iimgui  -DIMGUI_IMPL_OPENGL_LOADER_GL3W 
 
-LIBS =-lglfw3 -lserialport
+LIBS =-lglfw3 -lgl3w -lserialport
 
 
 
