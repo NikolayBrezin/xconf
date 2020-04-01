@@ -88,7 +88,7 @@ build_info:
 	@echo host system  ... $(HOST)
 
 clean:
-	rm -fr $(BIN) 
+	rm -fr $(BIN) .dep
 
 strip:
 	$(STRIP) $(BIN)
