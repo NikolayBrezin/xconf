@@ -4,9 +4,9 @@
 #include <iostream>
 extern "C"
 {
-#include "lua.h"
-#include "lauxlib.h"
-#include "lualib.h"
+#include <lua/lua.h>
+#include <lua/lauxlib.h>
+#include <lua/lualib.h>
 }
 
 #include <sol/sol.hpp>
@@ -17,7 +17,7 @@ int main()
 	lua.open_libraries(sol::lib::base);
 
 	lua.script("print('bark bark bark!')");
-    std::cout << "Hello World!\n";
+	std::cout << "Hello World!\n";
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
