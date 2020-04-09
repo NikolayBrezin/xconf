@@ -226,7 +226,7 @@ static bool write_serial(std::string& port_name, std::string json)
 
   return true ;
 }
-
+/*
 static void HelpMarker(const char* desc)
 {
     ImGui::TextDisabled("(?)");
@@ -239,6 +239,7 @@ static void HelpMarker(const char* desc)
         ImGui::EndTooltip();
     }
 }
+*/
 static void TextWithTooltip(const char* fmt, const char* desc, const char* tooltip)
 {
     ImGui::TextColored(ImVec4(1, 1, 0, 1), fmt, desc, tooltip);
@@ -872,12 +873,14 @@ void save_data(TreeItemPtr& root)
 	   std::cout << "error opening file " << device_write_file_name << " for writing \n";
 	}
 
-      // обезжиривание json \r и \n
+      // 'defateng'  json for \r и \n \t remove
+      
       std::string json = s.str() ;
-      json.erase(std::remove(json.begin(), json.end(), '\r') , json.end());
+      json.erase(std::remove(json.begin(), json.end(), '\r'), json.end());
       json.erase(std::remove(json.begin(), json.end(), '\n'), json.end());
-      //json.erase(std::remove(json.begin(), json.end(), ' '), json.end());  // могут быть в тексте подсказок и названий нодов
-      //json.erase(std::remove(json.begin(), json.end(), '\t'), json.end()); // могут быть в тексте подсказок и названий нодов
+      json.erase(std::remove(json.begin(), json.end(), '\t'), json.end());
+      //json.erase(std::remove(json.begin(), json.end(), ' '), json.end());  // используются в тексте подсказок и названий нодов
+      json.erase(std::remove(json.begin(), json.end(), '\t'), json.end());   // не используются в тексте подсказок и названий нодов, только при форматировании строк
       write_serial(port_name, json.c_str()) ;
 
     }
