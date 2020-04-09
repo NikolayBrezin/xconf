@@ -8,3 +8,9 @@ gears.exe
 uname -a
 ps
 exit
+ls
+pwd
+env
+env
+env
+exit
