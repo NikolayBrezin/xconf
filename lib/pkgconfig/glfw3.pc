@@ -1,0 +1,12 @@
+prefix=/opt/x86_64-kgp-mingw32-core2_sse4.1/x86_64-kgp-mingw32
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: GLFW
+Description: A multi-platform library for OpenGL, window and input
+Version: 3.4.0
+URL: https://www.glfw.org/
+Libs: -L${libdir} -lglfw3
+Libs.private: -lopengl32 -lgdi32
+Cflags: -I${includedir}
