@@ -19,8 +19,8 @@ import gdb
 import os
 import os.path
 
-pythondir = '/opt/home/cross/x86_64-kgp-mingw32/x86_64-kgp-mingw32-core2_sse4.1/x86_64-kgp-mingw32-core2_sse4.1/share/gcc-10.0.1/python'
-libdir = '/opt/home/cross/x86_64-kgp-mingw32/x86_64-kgp-mingw32-core2_sse4.1/x86_64-kgp-mingw32-core2_sse4.1/lib/gcc/x86_64-kgp-mingw32/10.0.1'
+pythondir = '/opt/x86_64-kgp-mingw32-core2_sse4.1/share/gcc-10.0.1/python'
+libdir = '/opt/x86_64-kgp-mingw32-core2_sse4.1/lib/gcc/x86_64-kgp-mingw32/10.0.1'
 
 # This file might be loaded when there is no current objfile.  This
 # can happen if the user loads it manually.  In this case we don't

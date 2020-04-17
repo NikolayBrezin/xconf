@@ -1,4 +1,4 @@
-/* generated for  x86_64-kgp-mingw32-gcc (Klen's GNU package (KGP) for target::x86_64-kgp-mingw32 @ host::x86_64-kgp-linux-gnu << TROLLIUS >>) 10.0.1 20200325 (experimental) */
+/* generated for  x86_64-kgp-mingw32-gcc (Klen's GNU package (KGP) for target::x86_64-kgp-mingw32 @ host::x86_64-kgp-linux-gnu << SELF_ISO >>) 10.0.1 20200411 (experimental) */
 
 #ifndef GCC_GENERATED_STDINT_H
 #define GCC_GENERATED_STDINT_H 1

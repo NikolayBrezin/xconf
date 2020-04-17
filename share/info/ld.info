@@ -2585,9 +2585,59 @@ linking for MIPS targets.
      an error.
 
 '--compact-branches'
-'--compact-branches'
+'--no-compact-branches'
      These options control the generation of compact instructions by the
      linker in the PLT entries for MIPS R6.
+
+2.1.7 Options specific to PDP11 targets
+---------------------------------------
+
+For the pdp11-aout target, three variants of the output format can be
+produced as selected by the following options.  The default variant for
+pdp11-aout is the '--omagic' option, whereas for other targets
+'--nmagic' is the default.  The '--imagic' option is defined only for
+the pdp11-aout target, while the others are described here as they apply
+to the pdp11-aout target.
+
+'-N'
+'--omagic'
+
+     Mark the output as 'OMAGIC' (0407) in the 'a.out' header to
+     indicate that the text segment is not to be write-protected and
+     shared.  Since the text and data sections are both readable and
+     writable, the data section is allocated immediately contiguous
+     after the text segment.  This is the oldest format for PDP11
+     executable programs and is the default for 'ld' on PDP11 Unix
+     systems from the beginning through 2.11BSD.
+
+'-n'
+'--nmagic'
+
+     Mark the output as 'NMAGIC' (0410) in the 'a.out' header to
+     indicate that when the output file is executed, the text portion
+     will be read-only and shareable among all processes executing the
+     same file.  This involves moving the data areas up to the first
+     possible 8K byte page boundary following the end of the text.  This
+     option creates a _pure executable_ format.
+
+'-z'
+'--imagic'
+
+     Mark the output as 'IMAGIC' (0411) in the 'a.out' header to
+     indicate that when the output file is executed, the program text
+     and data areas will be loaded into separate address spaces using
+     the split instruction and data space feature of the memory
+     management unit in larger models of the PDP11.  This doubles the
+     address space available to the program.  The text segment is again
+     pure, write-protected, and shareable.  The only difference in the
+     output format between this option and the others, besides the magic
+     number, is that both the text and data sections start at location
+     0.  The '-z' option selected this format in 2.11BSD. This option
+     creates a _separate executable_ format.
+
+'--no-omagic'
+
+     Equivalent to '--nmagic' for pdp11-aout.
 
 
 File: ld.info,  Node: Environment,  Prev: Options,  Up: Invocation
@@ -8005,6 +8055,7 @@ LD Index
 * --ignore-branch-isa:                   Options.            (line 2487)
 * --ignore-branch-isa <1>:               MIPS.               (line   13)
 * --image-base:                          Options.            (line 2088)
+* --imagic:                              Options.            (line 2536)
 * --in-implib=FILE:                      ARM.                (line  239)
 * --insert-timestamp:                    Options.            (line 2385)
 * --insn32:                              Options.            (line 2478)
@@ -8028,6 +8079,7 @@ LD Index
 * --mri-script=MRI-CMDFILE:              Options.            (line  145)
 * --multi-subspace:                      HPPA ELF32.         (line    6)
 * --nmagic:                              Options.            (line  486)
+* --nmagic <1>:                          Options.            (line 2526)
 * --no-accept-unknown-input-arch:        Options.            (line  967)
 * --no-add-needed:                       Options.            (line  994)
 * --no-allow-shlib-undefined:            Options.            (line 1301)
@@ -8060,6 +8112,7 @@ LD Index
 * --no-merge-exidx-entries <1>:          ARM.                (line  219)
 * --no-multi-toc:                        PowerPC64 ELF64.    (line  101)
 * --no-omagic:                           Options.            (line  501)
+* --no-omagic <1>:                       Options.            (line 2550)
 * --no-opd-optimize:                     PowerPC64 ELF64.    (line   75)
 * --no-overlays:                         SPU ELF.            (line    9)
 * --no-plt-align:                        PowerPC64 ELF64.    (line  123)
@@ -8089,6 +8142,7 @@ LD Index
 * --nxcompat:                            Options.            (line 2365)
 * --oformat=OUTPUT-FORMAT:               Options.            (line 1369)
 * --omagic:                              Options.            (line  492)
+* --omagic <1>:                          Options.            (line 2515)
 * --orphan-handling=MODE:                Options.            (line  677)
 * --out-implib:                          Options.            (line 1382)
 * --output-def:                          Options.            (line 2146)
@@ -8210,6 +8264,8 @@ LD Index
 * -Map=MAPFILE:                          Options.            (line 1274)
 * -n:                                    Options.            (line  486)
 * -N:                                    Options.            (line  492)
+* -N <1>:                                Options.            (line 2514)
+* -n <1>:                                Options.            (line 2525)
 * -no-relax:                             Options.            (line 1407)
 * -non_shared:                           Options.            (line 1021)
 * -nostdlib:                             Options.            (line 1364)
@@ -8246,6 +8302,7 @@ LD Index
 * -X:                                    Options.            (line  722)
 * -Y PATH:                               Options.            (line  737)
 * -y SYMBOL:                             Options.            (line  728)
+* -z:                                    Options.            (line 2535)
 * -z defs:                               Options.            (line 1285)
 * -z KEYWORD:                            Options.            (line  741)
 * -z muldefs:                            Options.            (line 1295)
@@ -8819,87 +8876,87 @@ Node: Top790
 Node: Overview1658
 Node: Invocation2774
 Node: Options3182
-Node: Environment117301
-Node: Scripts119062
-Node: Basic Script Concepts120796
-Node: Script Format123504
-Node: Simple Example124367
-Node: Simple Commands127461
-Node: Entry Point127966
-Node: File Commands128895
-Node: Format Commands133069
-Node: REGION_ALIAS135025
-Node: Miscellaneous Commands139852
-Node: Assignments145683
-Node: Simple Assignments146194
-Node: HIDDEN147925
-Node: PROVIDE148552
-Node: PROVIDE_HIDDEN150073
-Node: Source Code Reference150317
-Node: SECTIONS154234
-Node: Output Section Description156122
-Node: Output Section Name157363
-Node: Output Section Address158240
-Node: Input Section160473
-Node: Input Section Basics161274
-Node: Input Section Wildcards166292
-Node: Input Section Common171587
-Node: Input Section Keep173069
-Node: Input Section Example173559
-Node: Output Section Data174970
-Node: Output Section Keywords177749
-Node: Output Section Discarding181316
-Node: Output Section Attributes183046
-Node: Output Section Type184165
-Node: Output Section LMA185235
-Node: Forced Output Alignment188306
-Node: Forced Input Alignment188735
-Node: Output Section Constraint189123
-Node: Output Section Region189551
-Node: Output Section Phdr189984
-Node: Output Section Fill190648
-Node: Overlay Description191790
-Node: MEMORY196235
-Node: PHDRS200841
-Node: VERSION206167
-Node: Expressions214258
-Node: Constants215187
-Node: Symbolic Constants216061
-Node: Symbols216612
-Node: Orphan Sections217359
-Node: Location Counter218944
-Node: Operators223378
-Node: Evaluation224300
-Node: Expression Section225664
-Node: Builtin Functions229634
-Node: Implicit Linker Scripts237985
-Node: Machine Dependent238760
-Node: H8/300239848
-Node: M68HC11/68HC12241921
-Node: ARM243368
-Node: HPPA ELF32255615
-Node: M68K257238
-Node: MIPS258147
-Node: MMIX259263
-Node: MSP430260428
-Node: NDS32262341
-Node: Nios II263305
-Node: PowerPC ELF32264621
-Node: PowerPC64 ELF64267452
-Node: S/390 ELF276235
-Node: SPU ELF276582
-Node: TI COFF279210
-Node: WIN32279736
-Node: Xtensa299883
-Node: BFD302849
-Node: BFD outline304307
-Node: BFD information loss305595
-Node: Canonical format308121
-Node: Reporting Bugs312449
-Node: Bug Criteria313143
-Node: Bug Reporting313842
-Node: MRI320880
-Node: GNU Free Documentation License325351
-Node: LD Index350488
+Node: Environment119466
+Node: Scripts121227
+Node: Basic Script Concepts122961
+Node: Script Format125669
+Node: Simple Example126532
+Node: Simple Commands129626
+Node: Entry Point130131
+Node: File Commands131060
+Node: Format Commands135234
+Node: REGION_ALIAS137190
+Node: Miscellaneous Commands142017
+Node: Assignments147848
+Node: Simple Assignments148359
+Node: HIDDEN150090
+Node: PROVIDE150717
+Node: PROVIDE_HIDDEN152238
+Node: Source Code Reference152482
+Node: SECTIONS156399
+Node: Output Section Description158287
+Node: Output Section Name159528
+Node: Output Section Address160405
+Node: Input Section162638
+Node: Input Section Basics163439
+Node: Input Section Wildcards168457
+Node: Input Section Common173752
+Node: Input Section Keep175234
+Node: Input Section Example175724
+Node: Output Section Data177135
+Node: Output Section Keywords179914
+Node: Output Section Discarding183481
+Node: Output Section Attributes185211
+Node: Output Section Type186330
+Node: Output Section LMA187400
+Node: Forced Output Alignment190471
+Node: Forced Input Alignment190900
+Node: Output Section Constraint191288
+Node: Output Section Region191716
+Node: Output Section Phdr192149
+Node: Output Section Fill192813
+Node: Overlay Description193955
+Node: MEMORY198400
+Node: PHDRS203006
+Node: VERSION208332
+Node: Expressions216423
+Node: Constants217352
+Node: Symbolic Constants218226
+Node: Symbols218777
+Node: Orphan Sections219524
+Node: Location Counter221109
+Node: Operators225543
+Node: Evaluation226465
+Node: Expression Section227829
+Node: Builtin Functions231799
+Node: Implicit Linker Scripts240150
+Node: Machine Dependent240925
+Node: H8/300242013
+Node: M68HC11/68HC12244086
+Node: ARM245533
+Node: HPPA ELF32257780
+Node: M68K259403
+Node: MIPS260312
+Node: MMIX261428
+Node: MSP430262593
+Node: NDS32264506
+Node: Nios II265470
+Node: PowerPC ELF32266786
+Node: PowerPC64 ELF64269617
+Node: S/390 ELF278400
+Node: SPU ELF278747
+Node: TI COFF281375
+Node: WIN32281901
+Node: Xtensa302048
+Node: BFD305014
+Node: BFD outline306472
+Node: BFD information loss307760
+Node: Canonical format310286
+Node: Reporting Bugs314614
+Node: Bug Criteria315308
+Node: Bug Reporting316007
+Node: MRI323045
+Node: GNU Free Documentation License327516
+Node: LD Index352653
 
 End Tag Table

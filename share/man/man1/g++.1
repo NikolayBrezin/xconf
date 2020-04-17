@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GCC 1"
-.TH GCC 1 "2020-03-25" "gcc-10.0.1" "GNU"
+.TH GCC 1 "2020-04-17" "gcc-10.0.1" "GNU"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -569,8 +569,9 @@ in the following sections.
 \&\fB\-p  \-pg  \-fprofile\-arcs  \-\-coverage  \-ftest\-coverage 
 \&\-fprofile\-abs\-path 
 \&\-fprofile\-dir=\fR\fIpath\fR  \fB\-fprofile\-generate  \-fprofile\-generate=\fR\fIpath\fR 
-\&\fB\-fprofile\-note=\fR\fIpath\fR  \fB\-fprofile\-update=\fR\fImethod\fR 
-\&\fB\-fprofile\-filter\-files=\fR\fIregex\fR  \fB\-fprofile\-exclude\-files=\fR\fIregex\fR \fB\-fprofile\-reproducibility 
+\&\fB\-fprofile\-note=\fR\fIpath\fR \fB\-fprofile\-prefix\-path=\fR\fIpath\fR 
+\&\fB\-fprofile\-update=\fR\fImethod\fR \fB\-fprofile\-filter\-files=\fR\fIregex\fR 
+\&\fB\-fprofile\-exclude\-files=\fR\fIregex\fR \fB\-fprofile\-reproducibility 
 \&\-fsanitize=\fR\fIstyle\fR  \fB\-fsanitize\-recover  \-fsanitize\-recover=\fR\fIstyle\fR 
 \&\fB\-fasan\-shadow\-offset=\fR\fInumber\fR  \fB\-fsanitize\-sections=\fR\fIs1\fR\fB,\fR\fIs2\fR\fB,... 
 \&\-fsanitize\-undefined\-trap\-on\-error  \-fbounds\-check 
@@ -4586,13 +4587,14 @@ Options\fR and \fBObjective-C and Objective\-\*(C+ Dialect Options\fR.
 \&\fB\-Wenum\-compare\fR (in C/ObjC; this is on by default in \*(C+) 
 \&\fB\-Wenum\-conversion\fR in C/ObjC; 
 \&\fB\-Wformat   
+\&\-Wformat\-overflow  
+\&\-Wformat\-truncation  
 \&\-Wint\-in\-bool\-context  
 \&\-Wimplicit\fR (C and Objective-C only) 
 \&\fB\-Wimplicit\-int\fR (C and Objective-C only) 
 \&\fB\-Wimplicit\-function\-declaration\fR (C and Objective-C only) 
 \&\fB\-Winit\-self\fR (only for \*(C+) 
-\&\fB\-Wzero\-length\-bounds 
-\&\-Wlogical\-not\-parentheses 
+\&\fB\-Wlogical\-not\-parentheses 
 \&\-Wmain\fR (only for C/ObjC and unless\fB \fR\fB\-ffreestanding\fR)  
 \&\fB\-Wmaybe\-uninitialized 
 \&\-Wmemset\-elt\-size 
@@ -4626,7 +4628,8 @@ Options\fR and \fBObjective-C and Objective\-\*(C+ Dialect Options\fR.
 \&\-Wunused\-label     
 \&\-Wunused\-value     
 \&\-Wunused\-variable  
-\&\-Wvolatile\-register\-var\fR
+\&\-Wvolatile\-register\-var  
+\&\-Wzero\-length\-bounds\fR
 .Sp
 Note that some warning flags are not implied by \fB\-Wall\fR.  Some of
 them warn about constructions that users generally do not consider
@@ -7437,8 +7440,8 @@ reduce the padding and so make the structure smaller.
 .IX Item "-Wredundant-decls"
 Warn if anything is declared more than once in the same scope, even in
 cases where multiple declaration is valid and changes nothing.
-.IP "\fB\-Wno\-restrict\fR" 4
-.IX Item "-Wno-restrict"
+.IP "\fB\-Wrestrict\fR" 4
+.IX Item "-Wrestrict"
 Warn when an object referenced by a \f(CW\*(C`restrict\*(C'\fR\-qualified parameter
 (or, in \*(C+, a \f(CW\*(C`_\|_restrict\*(C'\fR\-qualified parameter) is aliased by another
 argument, or when copies between such objects overlap.  For example,
@@ -7926,10 +7929,12 @@ graph with information on what state will be purged at each node.
 The graph is written to \fI\fIfile\fI.state\-purge.dot\fR.
 .IP "\fB\-fdump\-analyzer\-supergraph\fR" 4
 .IX Item "-fdump-analyzer-supergraph"
-Dump a representation of the \*(L"supergraph\*(R" suitable for viewing with
-GraphViz to \fI\fIfile\fI.supergraph.dot\fR.  This shows all of the
+Dump representations of the \*(L"supergraph\*(R" suitable for viewing with
+GraphViz to \fI\fIfile\fI.supergraph.dot\fR and to
+\&\fI\fIfile\fI.supergraph\-eg.dot\fR.  These show all of the
 control flow graphs in the program, with interprocedural edges for
-calls and returns.
+calls and returns.  The second dump contains annotations showing nodes
+in the \*(L"exploded graph\*(R" and diagnostics associated with them.
 .SS "Options for Debugging Your Program"
 .IX Subsection "Options for Debugging Your Program"
 To tell \s-1GCC\s0 to emit extra information for use by a debugger, in almost 
@@ -9570,7 +9575,8 @@ Assume that a loop with an exit will eventually take the exit and not loop
 indefinitely.  This allows the compiler to remove loops that otherwise have
 no side-effects, not considering eventual endless looping as such.
 .Sp
-This option is enabled by default at \fB\-O2\fR.
+This option is enabled by default at \fB\-O2\fR for \*(C+ with \-std=c++11
+or higher.
 .IP "\fB\-ftree\-dominator\-opts\fR" 4
 .IX Item "-ftree-dominator-opts"
 Perform a variety of simple scalar cleanups (constant/copy
@@ -10053,9 +10059,9 @@ The \fB\-fstrict\-aliasing\fR option is enabled at levels
 .IP "\fB\-falign\-functions=\fR\fIn\fR\fB:\fR\fIm\fR\fB:\fR\fIn2\fR\fB:\fR\fIm2\fR" 4
 .IX Item "-falign-functions=n:m:n2:m2"
 .PD
-Align the start of functions to the next power-of-two greater than
-\&\fIn\fR, skipping up to \fIm\fR\-1 bytes.  This ensures that at least
-the first \fIm\fR bytes of the function can be fetched by the \s-1CPU\s0
+Align the start of functions to the next power-of-two greater than or
+equal to \fIn\fR, skipping up to \fIm\fR\-1 bytes.  This ensures that at
+least the first \fIm\fR bytes of the function can be fetched by the \s-1CPU\s0
 without crossing an \fIn\fR\-byte alignment boundary.
 .Sp
 If \fIm\fR is not specified, it defaults to \fIn\fR.
@@ -10131,6 +10137,9 @@ Align loops to a power-of-two boundary.  If the loops are executed
 many times, this makes up for any execution of the dummy padding
 instructions.
 .Sp
+If \fB\-falign\-labels\fR is greater than this value, then its value
+is used instead.
+.Sp
 Parameters of this option are analogous to the \fB\-falign\-functions\fR option.
 \&\fB\-fno\-align\-loops\fR and \fB\-falign\-loops=1\fR are
 equivalent and mean that loops are not aligned.
@@ -10154,6 +10163,9 @@ Enabled at levels \fB\-O2\fR, \fB\-O3\fR.
 Align branch targets to a power-of-two boundary, for branch targets
 where the targets can only be reached by jumping.  In this case,
 no dummy operations need be executed.
+.Sp
+If \fB\-falign\-labels\fR is greater than this value, then its value
+is used instead.
 .Sp
 Parameters of this option are analogous to the \fB\-falign\-functions\fR option.
 \&\fB\-fno\-align\-jumps\fR and \fB\-falign\-jumps=1\fR are
@@ -11859,6 +11871,11 @@ of aggregate which is considered for replacement when compiling for
 speed
 (\fBsra-max-scalarization-size-Ospeed\fR) or size
 (\fBsra-max-scalarization-size-Osize\fR) respectively.
+.IP "\fBsra-max-propagations\fR" 4
+.IX Item "sra-max-propagations"
+The maximum number of artificial accesses that Scalar Replacement of
+Aggregates (\s-1SRA\s0) will track, per one local variable, in order to
+facilitate copy propagation.
 .IP "\fBtm-max-aggregate-size\fR" 4
 .IX Item "tm-max-aggregate-size"
 When making copies of thread-local variables in a transaction, this
@@ -12433,6 +12450,19 @@ To optimize the program based on the collected profile information, use
 If \fIpath\fR is specified, \s-1GCC\s0 saves \fI.gcno\fR file into \fIpath\fR
 location.  If you combine the option with multiple source files,
 the \fI.gcno\fR file will be overwritten.
+.IP "\fB\-fprofile\-prefix\-path=\fR\fIpath\fR" 4
+.IX Item "-fprofile-prefix-path=path"
+This option can be used in combination with
+\&\fBprofile\-generate=\fR\fIprofile_dir\fR and
+\&\fBprofile\-use=\fR\fIprofile_dir\fR to inform \s-1GCC\s0 where is the base
+directory of built source tree.  By default \fIprofile_dir\fR will contain
+files with mangled absolute paths of all object files in the built project.
+This is not desirable when directory used to build the instrumented binary
+differs from the directory used to build the binary optimized with profile
+feedback because the profile data will not be found during the optimized build.
+In such setups \fB\-fprofile\-prefix\-path=\fR\fIpath\fR with \fIpath\fR
+pointing to the base directory of the build can be used to strip the irrelevant
+part of the path and keep all file names relative to the main build directory.
 .IP "\fB\-fprofile\-update=\fR\fImethod\fR" 4
 .IX Item "-fprofile-update=method"
 Alter the update method for an application instrumented for profile
@@ -17933,6 +17963,10 @@ The single\- and double-precision floating-point instructions.
 .IP "\fB+nofp\fR" 4
 .IX Item "+nofp"
 Disable the floating-point extension.
+.IP "\fB+cdecp0, +cdecp1, ... , +cdecp7\fR" 4
+.IX Item "+cdecp0, +cdecp1, ... , +cdecp7"
+Enable the Custom Datapath Extension (\s-1CDE\s0) on selected coprocessors according
+to the numbers given in the options in the range 0 to 7.
 .RE
 .RS 4
 .RE
@@ -17956,6 +17990,10 @@ The single\- and double-precision floating-point instructions.
 .IP "\fB+nofp\fR" 4
 .IX Item "+nofp"
 Disable the floating-point extension.
+.IP "\fB+cdecp0, +cdecp1, ... , +cdecp7\fR" 4
+.IX Item "+cdecp0, +cdecp1, ... , +cdecp7"
+Enable the Custom Datapath Extension (\s-1CDE\s0) on selected coprocessors according
+to the numbers given in the options in the range 0 to 7.
 .RE
 .RS 4
 .RE

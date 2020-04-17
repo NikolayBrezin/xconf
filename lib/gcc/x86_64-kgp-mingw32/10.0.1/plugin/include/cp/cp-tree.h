@@ -59,7 +59,10 @@ public:
     m_value (value), m_loc (cp_expr_location (m_value)) {}
 
   cp_expr (tree value, location_t loc):
-    m_value (value), m_loc (loc) {}
+    m_value (value), m_loc (loc)
+  {
+    protected_set_expr_location (value, loc);
+  }
 
   /* Implicit conversions to tree.  */
   operator tree () const { return m_value; }
@@ -6944,6 +6947,7 @@ extern int comp_template_args			(tree, tree, tree * = NULL,
 extern int template_args_equal                  (tree, tree, bool = false);
 extern tree maybe_process_partial_specialization (tree);
 extern tree most_specialized_instantiation	(tree);
+extern tree most_specialized_partial_spec       (tree, tsubst_flags_t);
 extern void print_candidates			(tree);
 extern void instantiate_pending_templates	(int);
 extern tree tsubst_default_argument		(tree, int, tree, tree,
@@ -7830,6 +7834,7 @@ struct diagnosing_failed_constraint
 {
   diagnosing_failed_constraint (tree, tree, bool);
   ~diagnosing_failed_constraint ();
+  static bool replay_errors_p ();
 
   bool diagnosing_error;
 };

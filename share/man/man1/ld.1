@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "LD 1"
-.TH LD 1 "2020-03-26" "binutils-2.34.50" "GNU Development Tools"
+.TH LD 1 "2020-04-17" "binutils-2.34.50" "GNU Development Tools"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -2942,11 +2942,63 @@ an error.
 .IP "\fB\-\-compact\-branches\fR" 4
 .IX Item "--compact-branches"
 .PD 0
-.IP "\fB\-\-compact\-branches\fR" 4
-.IX Item "--compact-branches"
+.IP "\fB\-\-no\-compact\-branches\fR" 4
+.IX Item "--no-compact-branches"
 .PD
 These options control the generation of compact instructions by the linker
 in the \s-1PLT\s0 entries for \s-1MIPS R6.\s0
+.PP
+For the pdp11\-aout target, three variants of the output format can be
+produced as selected by the following options.  The default variant
+for pdp11\-aout is the \fB\-\-omagic\fR option, whereas for other
+targets \fB\-\-nmagic\fR is the default.  The \fB\-\-imagic\fR option is
+defined only for the pdp11\-aout target, while the others are described
+here as they apply to the pdp11\-aout target.
+.IP "\fB\-N\fR" 4
+.IX Item "-N"
+.PD 0
+.IP "\fB\-\-omagic\fR" 4
+.IX Item "--omagic"
+.PD
+Mark the output as \f(CW\*(C`OMAGIC\*(C'\fR (0407) in the \fIa.out\fR header to
+indicate that the text segment is not to be write-protected and
+shared.  Since the text and data sections are both readable and
+writable, the data section is allocated immediately contiguous after
+the text segment.  This is the oldest format for \s-1PDP11\s0 executable
+programs and is the default for \fBld\fR on \s-1PDP11\s0 Unix systems
+from the beginning through 2.11BSD.
+.IP "\fB\-n\fR" 4
+.IX Item "-n"
+.PD 0
+.IP "\fB\-\-nmagic\fR" 4
+.IX Item "--nmagic"
+.PD
+Mark the output as \f(CW\*(C`NMAGIC\*(C'\fR (0410) in the \fIa.out\fR header to
+indicate that when the output file is executed, the text portion will
+be read-only and shareable among all processes executing the same
+file.  This involves moving the data areas up to the first possible 8K
+byte page boundary following the end of the text.  This option creates
+a \fIpure executable\fR format.
+.IP "\fB\-z\fR" 4
+.IX Item "-z"
+.PD 0
+.IP "\fB\-\-imagic\fR" 4
+.IX Item "--imagic"
+.PD
+Mark the output as \f(CW\*(C`IMAGIC\*(C'\fR (0411) in the \fIa.out\fR header to
+indicate that when the output file is executed, the program text and
+data areas will be loaded into separate address spaces using the split
+instruction and data space feature of the memory management unit in
+larger models of the \s-1PDP11.\s0  This doubles the address space available
+to the program.  The text segment is again pure, write-protected, and
+shareable.  The only difference in the output format between this
+option and the others, besides the magic number, is that both the text
+and data sections start at location 0.  The \fB\-z\fR option selected
+this format in 2.11BSD.  This option creates a \fIseparate
+executable\fR format.
+.IP "\fB\-\-no\-omagic\fR" 4
+.IX Item "--no-omagic"
+Equivalent to \fB\-\-nmagic\fR for pdp11\-aout.
 .SH "ENVIRONMENT"
 .IX Header "ENVIRONMENT"
 You can change the behaviour of \fBld\fR with the environment variables

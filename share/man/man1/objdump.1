@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "OBJDUMP 1"
-.TH OBJDUMP 1 "2020-03-26" "binutils-2.34.50" "GNU Development Tools"
+.TH OBJDUMP 1 "2020-04-17" "binutils-2.34.50" "GNU Development Tools"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -177,6 +177,7 @@ objdump [\fB\-a\fR|\fB\-\-archive\-headers\fR]
         [\fB\-w\fR|\fB\-\-wide\fR]
         [\fB\-\-start\-address=\fR\fIaddress\fR]
         [\fB\-\-stop\-address=\fR\fIaddress\fR]
+        [\fB\-\-no\-addresses\fR]
         [\fB\-\-prefix\-addresses\fR]
         [\fB\-\-[no\-]show\-raw\-insn\fR]
         [\fB\-\-adjust\-vma=\fR\fIoffset\fR]
@@ -341,6 +342,11 @@ sections as if they were instructions.
 Note if the \fB\-\-dwarf=follow\-links\fR option has also been enabled
 then any symbol tables in linked debug info files will be read in and
 used when disassembling.
+.IP "\fB\-\-no\-addresses\fR" 4
+.IX Item "--no-addresses"
+When disassembling, don't print addresses on each line or for symbols
+and relocation offsets.  In combination with \fB\-\-no\-show\-raw\-insn\fR
+this may be useful for comparing compiler output.
 .IP "\fB\-\-prefix\-addresses\fR" 4
 .IX Item "--prefix-addresses"
 When disassembling, print the complete address on each line.  This is

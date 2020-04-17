@@ -3727,27 +3727,27 @@ riscv32-*-elf
 =============
 
 The RISC-V RV32 instruction set.  This configuration is intended for
-embedded systems.  This (and all other RISC-V) targets are supported
-upstream as of the binutils 2.28 release.
+embedded systems.  This (and all other RISC-V) targets require the
+binutils 2.30 release.
 
 riscv32-*-linux
 ===============
 
 The RISC-V RV32 instruction set running GNU/Linux.  This (and all other
-RISC-V) targets are supported upstream as of the binutils 2.28 release.
+RISC-V) targets require the binutils 2.30 release.
 
 riscv64-*-elf
 =============
 
 The RISC-V RV64 instruction set.  This configuration is intended for
-embedded systems.  This (and all other RISC-V) targets are supported
-upstream as of the binutils 2.28 release.
+embedded systems.  This (and all other RISC-V) targets require the
+binutils 2.30 release.
 
 riscv64-*-linux
 ===============
 
 The RISC-V RV64 instruction set running GNU/Linux.  This (and all other
-RISC-V) targets are supported upstream as of the binutils 2.28 release.
+RISC-V) targets require the binutils 2.30 release.
 
 rx-*-elf
 ========
@@ -4852,37 +4852,37 @@ Ref: powerpcle-x-eabisim162244
 Ref: powerpcle-x-eabi162377
 Ref: rl78-x-elf162460
 Ref: riscv32-x-elf162566
-Ref: riscv32-x-linux162776
-Ref: riscv64-x-elf162954
-Ref: riscv64-x-linux163164
-Ref: rx-x-elf163342
-Ref: s390-x-linux163388
-Ref: s390x-x-linux163460
-Ref: s390x-ibm-tpf163547
-Ref: x-x-solaris2163678
-Ref: sparc-x-x166239
-Ref: sparc-sun-solaris2166741
-Ref: sparc-x-linux167880
-Ref: sparc64-x-solaris2167911
-Ref: sparcv9-x-solaris2168244
-Ref: c6x-x-x168331
-Ref: tilegx-*-linux168423
-Ref: tilegxbe-*-linux168565
-Ref: tilepro-*-linux168708
-Ref: visium-x-elf168829
-Ref: x-x-vxworks168937
-Ref: x86-64-x-x170460
-Ref: x86-64-x-solaris2170788
-Ref: xtensa-x-elf171438
-Ref: xtensa-x-linux172109
-Ref: windows172450
-Ref: x-x-cygwin174291
-Ref: x-x-mingw32174844
-Ref: older175070
-Ref: elf177187
-Node: Old177445
-Node: Configurations180578
-Node: GNU Free Documentation License184116
-Node: Concept Index209244
+Ref: riscv32-x-linux162755
+Ref: riscv64-x-elf162912
+Ref: riscv64-x-linux163101
+Ref: rx-x-elf163258
+Ref: s390-x-linux163304
+Ref: s390x-x-linux163376
+Ref: s390x-ibm-tpf163463
+Ref: x-x-solaris2163594
+Ref: sparc-x-x166155
+Ref: sparc-sun-solaris2166657
+Ref: sparc-x-linux167796
+Ref: sparc64-x-solaris2167827
+Ref: sparcv9-x-solaris2168160
+Ref: c6x-x-x168247
+Ref: tilegx-*-linux168339
+Ref: tilegxbe-*-linux168481
+Ref: tilepro-*-linux168624
+Ref: visium-x-elf168745
+Ref: x-x-vxworks168853
+Ref: x86-64-x-x170376
+Ref: x86-64-x-solaris2170704
+Ref: xtensa-x-elf171354
+Ref: xtensa-x-linux172025
+Ref: windows172366
+Ref: x-x-cygwin174207
+Ref: x-x-mingw32174760
+Ref: older174986
+Ref: elf177103
+Node: Old177361
+Node: Configurations180494
+Node: GNU Free Documentation License184032
+Node: Concept Index209160
 
 End Tag Table

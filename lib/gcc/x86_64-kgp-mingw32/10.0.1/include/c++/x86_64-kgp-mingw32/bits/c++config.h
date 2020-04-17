@@ -34,7 +34,7 @@
 #define _GLIBCXX_RELEASE 10
 
 // The datestamp of the C++ library in compressed ISO date format.
-#define __GLIBCXX__ 20200325
+#define __GLIBCXX__ 20200417
 
 // Macros for various attributes.
 //   _GLIBCXX_PURE
@@ -928,7 +928,7 @@ namespace std
 #define _GLIBCXX_HAVE_ISNAN 1
 
 /* Define to 1 if you have the `isnanf' function. */
-#define _GLIBCXX_HAVE_ISNANF 1
+/* #undef _GLIBCXX_HAVE_ISNANF */
 
 /* Define to 1 if you have the `isnanl' function. */
 /* #undef _GLIBCXX_HAVE_ISNANL */
@@ -1006,7 +1006,7 @@ namespace std
 #define _GLIBCXX_HAVE_MEMORY_H 1
 
 /* Define to 1 if you have the `modf' function. */
-/* #undef _GLIBCXX_HAVE_MODF */
+#define _GLIBCXX_HAVE_MODF 1
 
 /* Define to 1 if you have the `modff' function. */
 #define _GLIBCXX_HAVE_MODFF 1
@@ -1310,7 +1310,7 @@ namespace std
 /* #undef _GLIBCXX_HAVE__FINITE */
 
 /* Define to 1 if you have the `_finitef' function. */
-/* #undef _GLIBCXX_HAVE__FINITEF */
+#define _GLIBCXX_HAVE__FINITEF 1
 
 /* Define to 1 if you have the `_finitel' function. */
 /* #undef _GLIBCXX_HAVE__FINITEL */
@@ -1358,7 +1358,7 @@ namespace std
 /* #undef _GLIBCXX_HAVE__ISNAN */
 
 /* Define to 1 if you have the `_isnanf' function. */
-/* #undef _GLIBCXX_HAVE__ISNANF */
+#define _GLIBCXX_HAVE__ISNANF 1
 
 /* Define to 1 if you have the `_isnanl' function. */
 /* #undef _GLIBCXX_HAVE__ISNANL */
@@ -1507,7 +1507,7 @@ namespace std
 /* Define if C99 functions in <complex.h> should be used in <complex> for
    C++11. Using compiler builtins for these functions requires corresponding
    C99 library functions to be present. */
-/* #undef _GLIBCXX11_USE_C99_COMPLEX */
+#define _GLIBCXX11_USE_C99_COMPLEX 1
 
 /* Define if C99 functions or macros in <math.h> should be imported in <cmath>
    in namespace std for C++11. */

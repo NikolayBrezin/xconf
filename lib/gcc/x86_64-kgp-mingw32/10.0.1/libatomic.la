@@ -17,7 +17,7 @@ old_library='libatomic.a'
 inherited_linker_flags=''
 
 # Libraries that this one depends upon.
-dependency_libs=' -L/opt/home/cross/x86_64-kgp-mingw32/x86_64-kgp-mingw32-core2_sse4.1/x86_64-kgp-mingw32-core2_sse4.1/x86_64-kgp-mingw32/lib -L/opt/home/cross/x86_64-kgp-mingw32/x86_64-kgp-mingw32-core2_sse4.1/x86_64-kgp-mingw32-core2_sse4.1/mingw/lib'
+dependency_libs=' -L/opt/x86_64-kgp-mingw32-core2_sse4.1/x86_64-kgp-mingw32/lib -L/opt/x86_64-kgp-mingw32-core2_sse4.1/mingw/lib'
 
 # Names of additional weak libraries provided by this library
 weak_library_names=''
@@ -38,4 +38,4 @@ dlopen=''
 dlpreopen=''
 
 # Directory that this library needs to be installed in:
-libdir='/opt/home/cross/x86_64-kgp-mingw32/x86_64-kgp-mingw32-core2_sse4.1/x86_64-kgp-mingw32-core2_sse4.1/lib/gcc/x86_64-kgp-mingw32/10.0.1'
+libdir='/opt/x86_64-kgp-mingw32-core2_sse4.1/lib/gcc/x86_64-kgp-mingw32/10.0.1'

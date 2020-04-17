@@ -2289,18 +2289,30 @@
 #define HAVE_sse2_gtv16qi3 (TARGET_SSE2 && !TARGET_XOP)
 #define HAVE_sse2_gtv8hi3 (TARGET_SSE2 && !TARGET_XOP)
 #define HAVE_sse2_gtv4si3 (TARGET_SSE2 && !TARGET_XOP)
-#define HAVE_one_cmplv16si2_mask (TARGET_AVX512F)
-#define HAVE_one_cmplv8di2_mask (TARGET_AVX512F)
-#define HAVE_one_cmplv64qi2_mask ((TARGET_AVX512F) && ((TARGET_AVX512F) && (TARGET_AVX512BW)))
-#define HAVE_one_cmplv32qi2_mask ((TARGET_AVX512F) && ((TARGET_AVX512F) && (TARGET_AVX)))
-#define HAVE_one_cmplv16qi2_mask (TARGET_AVX512F)
-#define HAVE_one_cmplv32hi2_mask ((TARGET_AVX512F) && ((TARGET_AVX512F) && (TARGET_AVX512BW)))
-#define HAVE_one_cmplv16hi2_mask ((TARGET_AVX512F) && ((TARGET_AVX512F) && (TARGET_AVX)))
-#define HAVE_one_cmplv8hi2_mask (TARGET_AVX512F)
-#define HAVE_one_cmplv8si2_mask ((TARGET_AVX512F) && ((TARGET_AVX512F) && (TARGET_AVX)))
-#define HAVE_one_cmplv4si2_mask (TARGET_AVX512F)
-#define HAVE_one_cmplv4di2_mask ((TARGET_AVX512F) && ((TARGET_AVX512F) && (TARGET_AVX)))
-#define HAVE_one_cmplv2di2_mask (TARGET_AVX512F)
+#define HAVE_one_cmplv16si2_mask ((TARGET_AVX512F) && ((TARGET_AVX512F \
+   && (!true \
+       || SImode == SImode \
+       || SImode == DImode)) && (TARGET_AVX512F)))
+#define HAVE_one_cmplv8di2_mask ((TARGET_AVX512F) && ((TARGET_AVX512F \
+   && (!true \
+       || DImode == SImode \
+       || DImode == DImode)) && (TARGET_AVX512F)))
+#define HAVE_one_cmplv8si2_mask ((TARGET_AVX512F) && ((TARGET_AVX512F \
+   && (!true \
+       || SImode == SImode \
+       || SImode == DImode)) && (TARGET_AVX)))
+#define HAVE_one_cmplv4si2_mask ((TARGET_AVX512F) && (TARGET_AVX512F \
+   && (!true \
+       || SImode == SImode \
+       || SImode == DImode)))
+#define HAVE_one_cmplv4di2_mask ((TARGET_AVX512F) && ((TARGET_AVX512F \
+   && (!true \
+       || DImode == SImode \
+       || DImode == DImode)) && (TARGET_AVX)))
+#define HAVE_one_cmplv2di2_mask ((TARGET_AVX512F) && (TARGET_AVX512F \
+   && (!true \
+       || DImode == SImode \
+       || DImode == DImode)))
 #define HAVE_andv16si3_mask ((TARGET_AVX512F) && ((TARGET_SSE && (64 == 64 || TARGET_AVX512VL) \
    && !(MEM_P (operands[1]) && MEM_P (operands[2]))) && (TARGET_AVX512F)))
 #define HAVE_iorv16si3_mask ((TARGET_AVX512F) && ((TARGET_SSE && (64 == 64 || TARGET_AVX512VL) \
@@ -5157,14 +5169,14 @@
 #define HAVE_reduc_smin_scal_v4sf (TARGET_SSE)
 #define HAVE_reduc_smax_scal_v2df (TARGET_SSE)
 #define HAVE_reduc_smin_scal_v2df (TARGET_SSE)
+#define HAVE_reduc_smax_scal_v4si (TARGET_SSE2)
+#define HAVE_reduc_smin_scal_v4si (TARGET_SSE2)
+#define HAVE_reduc_smax_scal_v8hi (TARGET_SSE2)
+#define HAVE_reduc_smin_scal_v8hi (TARGET_SSE2)
+#define HAVE_reduc_smax_scal_v16qi (TARGET_SSE2)
+#define HAVE_reduc_smin_scal_v16qi (TARGET_SSE2)
 #define HAVE_reduc_smax_scal_v2di (TARGET_SSE4_2)
 #define HAVE_reduc_smin_scal_v2di (TARGET_SSE4_2)
-#define HAVE_reduc_smax_scal_v4si (TARGET_SSE)
-#define HAVE_reduc_smin_scal_v4si (TARGET_SSE)
-#define HAVE_reduc_smax_scal_v8hi (TARGET_SSE)
-#define HAVE_reduc_smin_scal_v8hi (TARGET_SSE)
-#define HAVE_reduc_smax_scal_v16qi (TARGET_SSE)
-#define HAVE_reduc_smin_scal_v16qi (TARGET_SSE)
 #define HAVE_reduc_smax_scal_v32qi (TARGET_AVX2)
 #define HAVE_reduc_smin_scal_v32qi (TARGET_AVX2)
 #define HAVE_reduc_smax_scal_v16hi (TARGET_AVX2)
@@ -9778,12 +9790,42 @@ extern rtx        gen_sse2_gtv8hi3                               (rtx, rtx, rtx)
 extern rtx        gen_sse2_gtv4si3                               (rtx, rtx, rtx);
 extern rtx        gen_one_cmplv16si2_mask                        (rtx, rtx, rtx, rtx, rtx);
 extern rtx        gen_one_cmplv8di2_mask                         (rtx, rtx, rtx, rtx, rtx);
-extern rtx        gen_one_cmplv64qi2_mask                        (rtx, rtx, rtx, rtx, rtx);
-extern rtx        gen_one_cmplv32qi2_mask                        (rtx, rtx, rtx, rtx, rtx);
-extern rtx        gen_one_cmplv16qi2_mask                        (rtx, rtx, rtx, rtx, rtx);
-extern rtx        gen_one_cmplv32hi2_mask                        (rtx, rtx, rtx, rtx, rtx);
-extern rtx        gen_one_cmplv16hi2_mask                        (rtx, rtx, rtx, rtx, rtx);
-extern rtx        gen_one_cmplv8hi2_mask                         (rtx, rtx, rtx, rtx, rtx);
+static inline rtx gen_one_cmplv64qi2_mask                        (rtx, rtx, rtx, rtx, rtx);
+static inline rtx
+gen_one_cmplv64qi2_mask(rtx ARG_UNUSED (a), rtx ARG_UNUSED (b), rtx ARG_UNUSED (c), rtx ARG_UNUSED (d), rtx ARG_UNUSED (e))
+{
+  return 0;
+}
+static inline rtx gen_one_cmplv32qi2_mask                        (rtx, rtx, rtx, rtx, rtx);
+static inline rtx
+gen_one_cmplv32qi2_mask(rtx ARG_UNUSED (a), rtx ARG_UNUSED (b), rtx ARG_UNUSED (c), rtx ARG_UNUSED (d), rtx ARG_UNUSED (e))
+{
+  return 0;
+}
+static inline rtx gen_one_cmplv16qi2_mask                        (rtx, rtx, rtx, rtx, rtx);
+static inline rtx
+gen_one_cmplv16qi2_mask(rtx ARG_UNUSED (a), rtx ARG_UNUSED (b), rtx ARG_UNUSED (c), rtx ARG_UNUSED (d), rtx ARG_UNUSED (e))
+{
+  return 0;
+}
+static inline rtx gen_one_cmplv32hi2_mask                        (rtx, rtx, rtx, rtx, rtx);
+static inline rtx
+gen_one_cmplv32hi2_mask(rtx ARG_UNUSED (a), rtx ARG_UNUSED (b), rtx ARG_UNUSED (c), rtx ARG_UNUSED (d), rtx ARG_UNUSED (e))
+{
+  return 0;
+}
+static inline rtx gen_one_cmplv16hi2_mask                        (rtx, rtx, rtx, rtx, rtx);
+static inline rtx
+gen_one_cmplv16hi2_mask(rtx ARG_UNUSED (a), rtx ARG_UNUSED (b), rtx ARG_UNUSED (c), rtx ARG_UNUSED (d), rtx ARG_UNUSED (e))
+{
+  return 0;
+}
+static inline rtx gen_one_cmplv8hi2_mask                         (rtx, rtx, rtx, rtx, rtx);
+static inline rtx
+gen_one_cmplv8hi2_mask(rtx ARG_UNUSED (a), rtx ARG_UNUSED (b), rtx ARG_UNUSED (c), rtx ARG_UNUSED (d), rtx ARG_UNUSED (e))
+{
+  return 0;
+}
 extern rtx        gen_one_cmplv8si2_mask                         (rtx, rtx, rtx, rtx, rtx);
 extern rtx        gen_one_cmplv4si2_mask                         (rtx, rtx, rtx, rtx, rtx);
 extern rtx        gen_one_cmplv4di2_mask                         (rtx, rtx, rtx, rtx, rtx);
@@ -12164,14 +12206,14 @@ extern rtx        gen_reduc_smax_scal_v4sf                       (rtx, rtx);
 extern rtx        gen_reduc_smin_scal_v4sf                       (rtx, rtx);
 extern rtx        gen_reduc_smax_scal_v2df                       (rtx, rtx);
 extern rtx        gen_reduc_smin_scal_v2df                       (rtx, rtx);
-extern rtx        gen_reduc_smax_scal_v2di                       (rtx, rtx);
-extern rtx        gen_reduc_smin_scal_v2di                       (rtx, rtx);
 extern rtx        gen_reduc_smax_scal_v4si                       (rtx, rtx);
 extern rtx        gen_reduc_smin_scal_v4si                       (rtx, rtx);
 extern rtx        gen_reduc_smax_scal_v8hi                       (rtx, rtx);
 extern rtx        gen_reduc_smin_scal_v8hi                       (rtx, rtx);
 extern rtx        gen_reduc_smax_scal_v16qi                      (rtx, rtx);
 extern rtx        gen_reduc_smin_scal_v16qi                      (rtx, rtx);
+extern rtx        gen_reduc_smax_scal_v2di                       (rtx, rtx);
+extern rtx        gen_reduc_smin_scal_v2di                       (rtx, rtx);
 extern rtx        gen_reduc_smax_scal_v32qi                      (rtx, rtx);
 extern rtx        gen_reduc_smin_scal_v32qi                      (rtx, rtx);
 extern rtx        gen_reduc_smax_scal_v16hi                      (rtx, rtx);
