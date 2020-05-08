@@ -1,4 +1,4 @@
-This is ld.info, produced by makeinfo version 6.5 from ld.texi.
+This is ld.info, produced by makeinfo version 6.6 from ld.texi.
 
 This file documents the GNU linker LD (Klen's GNU package (KGP) for
 target::x86_64-kgp-mingw32  host::x86_64-kgp-mingw32 << TROLLIUS >>)
@@ -2936,13 +2936,16 @@ Several linker script commands deal with files.
      In case a "sysroot prefix" is configured, and the filename starts
      with the '/' character, and the script being processed was located
      inside the "sysroot prefix", the filename will be looked for in the
-     "sysroot prefix".  Otherwise, the linker will try to open the file
-     in the current directory.  If it is not found, the linker will
-     search through the archive library search path.  The "sysroot
-     prefix" can also be forced by specifying '=' as the first character
-     in the filename path, or prefixing the filename path with
-     '$SYSROOT'.  See also the description of '-L' in *note Command-line
-     Options: Options.
+     "sysroot prefix".  The "sysroot prefix" can also be forced by
+     specifying '=' as the first character in the filename path, or
+     prefixing the filename path with '$SYSROOT'.  See also the
+     description of '-L' in *note Command-line Options: Options.
+
+     If a "sysroot prefix" is not used then the linker will try to open
+     the file in the directory containing the linker script.  If it is
+     not found the linker will then search the current directory.  If it
+     is still not found the linker will search through the archive
+     library search path.
 
      If you use 'INPUT (-lFILE)', 'ld' will transform the name to
      'libFILE.a', as with the command-line argument '-l'.
@@ -8341,7 +8344,7 @@ LD Index
 * architecture:                          Miscellaneous Commands.
                                                              (line  121)
 * archive files, from cmd line:          Options.            (line  358)
-* archive search path in linker script:  File Commands.      (line   77)
+* archive search path in linker script:  File Commands.      (line   80)
 * arithmetic:                            Expressions.        (line    6)
 * arithmetic operators:                  Operators.          (line    6)
 * ARM interworking support:              ARM.                (line    6)
@@ -8351,7 +8354,7 @@ LD Index
 * assertion in linker script:            Miscellaneous Commands.
                                                              (line    9)
 * assignment in scripts:                 Assignments.        (line    6)
-* AS_NEEDED(FILES):                      File Commands.      (line   57)
+* AS_NEEDED(FILES):                      File Commands.      (line   60)
 * AT(LMA):                               Output Section LMA. (line    6)
 * AT>LMA_REGION:                         Output Section LMA. (line    6)
 * automatic data imports:                WIN32.              (line  185)
@@ -8468,7 +8471,7 @@ LD Index
 * FILL(EXPRESSION):                      Output Section Data.
                                                              (line   39)
 * finalization function:                 Options.            (line  324)
-* first input file:                      File Commands.      (line   85)
+* first input file:                      File Commands.      (line   88)
 * first instruction:                     Entry Point.        (line    6)
 * FIX_V4BX:                              ARM.                (line   48)
 * FIX_V4BX_INTERWORKING:                 ARM.                (line   61)
@@ -8493,8 +8496,8 @@ LD Index
 * group allocation in linker script:     Options.            (line 1133)
 * group allocation in linker script <1>: Miscellaneous Commands.
                                                              (line   56)
-* GROUP(FILES):                          File Commands.      (line   50)
-* grouping input files:                  File Commands.      (line   50)
+* GROUP(FILES):                          File Commands.      (line   53)
+* grouping input files:                  File Commands.      (line   53)
 * groups of archives:                    Options.            (line  949)
 * H8/300 support:                        H8/300.             (line    6)
 * header size:                           Builtin Functions.  (line  191)
@@ -8555,7 +8558,7 @@ LD Index
 * len =:                                 MEMORY.             (line   72)
 * LENGTH =:                              MEMORY.             (line   72)
 * LENGTH(MEMORY):                        Builtin Functions.  (line  141)
-* library search path in linker script:  File Commands.      (line   77)
+* library search path in linker script:  File Commands.      (line   80)
 * link map:                              Options.            (line  426)
 * link map discarded:                    Options.            (line  481)
 * link-time runtime library search path: Options.            (line 1474)
@@ -8643,7 +8646,7 @@ LD Index
 * orphan sections:                       Options.            (line  677)
 * output file after errors:              Options.            (line 1358)
 * output file format in linker script:   Format Commands.    (line   10)
-* output file name in linker script:     File Commands.      (line   67)
+* output file name in linker script:     File Commands.      (line   70)
 * output format:                         Options.            (line 1248)
 * output section alignment:              Forced Output Alignment.
                                                              (line    6)
@@ -8651,7 +8654,7 @@ LD Index
                                                              (line    6)
 * output section data:                   Output Section Data.
                                                              (line    6)
-* OUTPUT(FILENAME):                      File Commands.      (line   67)
+* OUTPUT(FILENAME):                      File Commands.      (line   70)
 * OUTPUT_ARCH(BFDARCH):                  Miscellaneous Commands.
                                                              (line  121)
 * OUTPUT_FORMAT(BFDNAME):                Format Commands.    (line   10)
@@ -8742,8 +8745,8 @@ LD Index
 * script files <1>:                      Options.            (line  633)
 * scripts:                               Scripts.            (line    6)
 * search directory, from cmd line:       Options.            (line  391)
-* search path in linker script:          File Commands.      (line   77)
-* SEARCH_DIR(PATH):                      File Commands.      (line   77)
+* search path in linker script:          File Commands.      (line   80)
+* SEARCH_DIR(PATH):                      File Commands.      (line   80)
 * SECT (MRI):                            MRI.                (line  101)
 * section address:                       Output Section Address.
                                                              (line    6)
@@ -8806,7 +8809,7 @@ LD Index
 * stack size:                            Options.            (line 2331)
 * standard Unix system:                  Options.            (line    7)
 * start of execution:                    Entry Point.        (line    6)
-* STARTUP(FILENAME):                     File Commands.      (line   85)
+* STARTUP(FILENAME):                     File Commands.      (line   88)
 * STM32L4xx erratum workaround:          ARM.                (line  120)
 * strip all symbols:                     Options.            (line  602)
 * strip debugger symbols:                Options.            (line  606)
@@ -8884,79 +8887,79 @@ Node: Simple Example126532
 Node: Simple Commands129626
 Node: Entry Point130131
 Node: File Commands131060
-Node: Format Commands135234
-Node: REGION_ALIAS137190
-Node: Miscellaneous Commands142017
-Node: Assignments147848
-Node: Simple Assignments148359
-Node: HIDDEN150090
-Node: PROVIDE150717
-Node: PROVIDE_HIDDEN152238
-Node: Source Code Reference152482
-Node: SECTIONS156399
-Node: Output Section Description158287
-Node: Output Section Name159528
-Node: Output Section Address160405
-Node: Input Section162638
-Node: Input Section Basics163439
-Node: Input Section Wildcards168457
-Node: Input Section Common173752
-Node: Input Section Keep175234
-Node: Input Section Example175724
-Node: Output Section Data177135
-Node: Output Section Keywords179914
-Node: Output Section Discarding183481
-Node: Output Section Attributes185211
-Node: Output Section Type186330
-Node: Output Section LMA187400
-Node: Forced Output Alignment190471
-Node: Forced Input Alignment190900
-Node: Output Section Constraint191288
-Node: Output Section Region191716
-Node: Output Section Phdr192149
-Node: Output Section Fill192813
-Node: Overlay Description193955
-Node: MEMORY198400
-Node: PHDRS203006
-Node: VERSION208332
-Node: Expressions216423
-Node: Constants217352
-Node: Symbolic Constants218226
-Node: Symbols218777
-Node: Orphan Sections219524
-Node: Location Counter221109
-Node: Operators225543
-Node: Evaluation226465
-Node: Expression Section227829
-Node: Builtin Functions231799
-Node: Implicit Linker Scripts240150
-Node: Machine Dependent240925
-Node: H8/300242013
-Node: M68HC11/68HC12244086
-Node: ARM245533
-Node: HPPA ELF32257780
-Node: M68K259403
-Node: MIPS260312
-Node: MMIX261428
-Node: MSP430262593
-Node: NDS32264506
-Node: Nios II265470
-Node: PowerPC ELF32266786
-Node: PowerPC64 ELF64269617
-Node: S/390 ELF278400
-Node: SPU ELF278747
-Node: TI COFF281375
-Node: WIN32281901
-Node: Xtensa302048
-Node: BFD305014
-Node: BFD outline306472
-Node: BFD information loss307760
-Node: Canonical format310286
-Node: Reporting Bugs314614
-Node: Bug Criteria315308
-Node: Bug Reporting316007
-Node: MRI323045
-Node: GNU Free Documentation License327516
-Node: LD Index352653
+Node: Format Commands135369
+Node: REGION_ALIAS137325
+Node: Miscellaneous Commands142152
+Node: Assignments147983
+Node: Simple Assignments148494
+Node: HIDDEN150225
+Node: PROVIDE150852
+Node: PROVIDE_HIDDEN152373
+Node: Source Code Reference152617
+Node: SECTIONS156534
+Node: Output Section Description158422
+Node: Output Section Name159663
+Node: Output Section Address160540
+Node: Input Section162773
+Node: Input Section Basics163574
+Node: Input Section Wildcards168592
+Node: Input Section Common173887
+Node: Input Section Keep175369
+Node: Input Section Example175859
+Node: Output Section Data177270
+Node: Output Section Keywords180049
+Node: Output Section Discarding183616
+Node: Output Section Attributes185346
+Node: Output Section Type186465
+Node: Output Section LMA187535
+Node: Forced Output Alignment190606
+Node: Forced Input Alignment191035
+Node: Output Section Constraint191423
+Node: Output Section Region191851
+Node: Output Section Phdr192284
+Node: Output Section Fill192948
+Node: Overlay Description194090
+Node: MEMORY198535
+Node: PHDRS203141
+Node: VERSION208467
+Node: Expressions216558
+Node: Constants217487
+Node: Symbolic Constants218361
+Node: Symbols218912
+Node: Orphan Sections219659
+Node: Location Counter221244
+Node: Operators225678
+Node: Evaluation226600
+Node: Expression Section227964
+Node: Builtin Functions231934
+Node: Implicit Linker Scripts240285
+Node: Machine Dependent241060
+Node: H8/300242148
+Node: M68HC11/68HC12244221
+Node: ARM245668
+Node: HPPA ELF32257915
+Node: M68K259538
+Node: MIPS260447
+Node: MMIX261563
+Node: MSP430262728
+Node: NDS32264641
+Node: Nios II265605
+Node: PowerPC ELF32266921
+Node: PowerPC64 ELF64269752
+Node: S/390 ELF278535
+Node: SPU ELF278882
+Node: TI COFF281510
+Node: WIN32282036
+Node: Xtensa302183
+Node: BFD305149
+Node: BFD outline306607
+Node: BFD information loss307895
+Node: Canonical format310421
+Node: Reporting Bugs314749
+Node: Bug Criteria315443
+Node: Bug Reporting316142
+Node: MRI323180
+Node: GNU Free Documentation License327651
+Node: LD Index352788
 
 End Tag Table

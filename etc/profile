@@ -17,11 +17,12 @@ fi
 # MSYS runtime and wanting different paths searched first for files.
 
 RISCV32IMAC_KGP_ELF_BIN=/opt/riscv32imac-kgp-elf/bin
+ARM_KGP_EABI_BIN=/opt/arm-kgp-eabi/bin
 
 if [ $MSYSTEM == MINGW32 ]; then
-  export PATH=".:/usr/local/bin:/mingw/bin:/bin:$RISCV32IMAC_KGP_ELF_BIN:$PATH"
+  export PATH=".:/usr/local/bin:/mingw/bin:/bin:$RISCV32IMAC_KGP_ELF_BIN:$ARM_KGP_EABI_BIN:$PATH"
 else
-  export PATH=".:/usr/local/bin:/bin:/mingw/bin:$RISCV32IMAC_KGP_ELF_BIN:$PATH"
+  export PATH=".:/usr/local/bin:/bin:/mingw/bin:$RISCV32IMAC_KGP_ELF_BIN:$ARM_KGP_EABI_BIN:$PATH"
 fi
 
 if [ -z "$USERNAME" ]; then
@@ -60,4 +61,5 @@ $ '
 alias clear=clsb
 
 cd "$HOME"
+/msys.bat
 

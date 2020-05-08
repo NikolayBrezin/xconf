@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "READELF 1"
-.TH READELF 1 "2020-04-17" "binutils-2.34.50" "GNU Development Tools"
+.TH READELF 1 "2020-05-08" "binutils-2.34.50" "GNU Development Tools"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -158,6 +158,7 @@ readelf [\fB\-a\fR|\fB\-\-all\fR]
         [\fB\-V\fR|\fB\-\-version\-info\fR]
         [\fB\-A\fR|\fB\-\-arch\-specific\fR]
         [\fB\-D\fR|\fB\-\-use\-dynamic\fR]
+        [\fB\-L\fR|\fB\-\-lint\fR|\fB\-\-enable\-checks\fR]
         [\fB\-x\fR <number or name>|\fB\-\-hex\-dump=\fR<number or name>]
         [\fB\-p\fR <number or name>|\fB\-\-string\-dump=\fR<number or name>]
         [\fB\-R\fR <number or name>|\fB\-\-relocated\-dump=\fR<number or name>]
@@ -341,6 +342,19 @@ symbol table sections.
 .Sp
 When displaying relocations, this option makes \fBreadelf\fR
 display the dynamic relocations rather than the static relocations.
+.IP "\fB\-L\fR" 4
+.IX Item "-L"
+.PD 0
+.IP "\fB\-\-lint\fR" 4
+.IX Item "--lint"
+.IP "\fB\-\-enable\-checks\fR" 4
+.IX Item "--enable-checks"
+.PD
+Displays warning messages about possible problems with the file(s)
+being examined.  If used on its own then all of the contents of the
+file(s) will be examined.  If used with one of the dumping options
+then the warning messages will only be produced for the things being
+displayed.
 .IP "\fB\-x <number or name>\fR" 4
 .IX Item "-x <number or name>"
 .PD 0

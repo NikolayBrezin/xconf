@@ -1,4 +1,4 @@
-This is gccinstall.info, produced by makeinfo version 6.5 from
+This is gccinstall.info, produced by makeinfo version 6.6 from
 install.texi.
 
 Copyright (C) 1988-2020 Free Software Foundation, Inc.
@@ -228,8 +228,7 @@ Perl version between 5.6.1 and 5.6.24
 
      Necessary when targeting Darwin, building 'libstdc++', and not
      using '--disable-symvers'.  Necessary when targeting Solaris 2 with
-     Sun 'ld' and not using '--disable-symvers'.  The bundled 'perl' in
-     Solaris 8 and up works.
+     Solaris 'ld' and not using '--disable-symvers'.
 
      Necessary when regenerating 'Makefile' dependencies in libiberty.
      Necessary when regenerating 'libiberty/functions.texi'.  Necessary
@@ -505,6 +504,19 @@ to make clear that your version contains modifications.
      modifications.
 
      The default value refers to the FSF's GCC bug tracker.
+
+'--with-documentation-root-url=URL'
+     Specify the URL root that contains GCC option documentation.  The
+     URL should end with a '/' character.
+
+     The default value is https://gcc.gnu.org/onlinedocs/.
+
+'--with-changes-root-url=URL'
+     Specify the URL root that contains information about changes in GCC
+     releases like 'gcc-VERSION/changes.html'.  The URL should end with
+     a '/' character.
+
+     The default value is https://gcc.gnu.org/.
 
 Target specification
 ====================
@@ -807,7 +819,7 @@ option.
 
         * If the target system is the same that you are building on,
           check operating system specific directories (e.g.
-          '/usr/ccs/bin' on Sun Solaris 2).
+          '/usr/ccs/bin' on Solaris 2).
 
         * Check in the 'PATH' for a tool whose name is prefixed by the
           target system triple.
@@ -2174,6 +2186,38 @@ D-Specific Options
 
 The following options apply to the build of the D runtime library.
 
+'--enable-libphobos-checking'
+'--disable-libphobos-checking'
+'--enable-libphobos-checking=LIST'
+     This option controls whether run-time checks and contracts are
+     compiled into the D runtime library.  When the option is not
+     specified, the library is built with 'release' checking.  When the
+     option is specified without a LIST, the result is the same as
+     '--enable-libphobos-checking=yes'.  Likewise,
+     '--disable-libphobos-checking' is equivalent to
+     '--enable-libphobos-checking=no'.
+
+     The categories of checks available in LIST are 'yes' (compiles
+     libphobos with '-fno-release'), 'no' (compiles libphobos with
+     '-frelease'), 'all' (same as 'yes'), 'none' or 'release' (same as
+     'no').
+
+     Individual checks available in LIST are 'assert' (compiles
+     libphobos with an extra option '-fassert').
+
+'--with-libphobos-druntime-only'
+'--with-libphobos-druntime-only=CHOICE'
+     Specify whether to build only the core D runtime library
+     (druntime), or both the core and standard library (phobos) into
+     libphobos.  This is useful for targets that have full support in
+     druntime, but no or incomplete support in phobos.  CHOICE can be
+     one of 'auto', 'yes', and 'no' where 'auto' is the default.
+
+     When the option is not specified, the default choice 'auto' means
+     that it is inferred whether the target has support for the phobos
+     standard library.  When the option is specified without a CHOICE,
+     the result is the same as '--with-libphobos-druntime-only=yes'.
+
 '--with-target-system-zlib'
      Use installed 'zlib' rather than that included with GCC.  This
      needs to be available for each multilib variant, unless configured
@@ -2846,8 +2890,6 @@ makers.
    * Solaris 2 (SPARC, Intel):
         * OpenCSW
 
-        * TGCware
-
    * macOS:
         * The Homebrew package manager;
         * MacPorts.
@@ -3285,26 +3327,26 @@ can be found on www.bitwizard.nl.
 i?86-*-solaris2*
 ================
 
-Use this for Solaris 11 or later on x86 and x86-64 systems.  Starting
+Use this for Solaris 11.3 or later on x86 and x86-64 systems.  Starting
 with GCC 4.7, there is also a 64-bit 'amd64-*-solaris2*' or
 'x86_64-*-solaris2*' configuration that corresponds to
 'sparcv9-sun-solaris2*'.
 
    It is recommended that you configure GCC to use the GNU assembler.
-The versions included in Solaris 11, from GNU binutils 2.19 or newer
-(also available as '/usr/bin/gas' and '/usr/gnu/bin/as'), work fine.
-The current version, from GNU binutils 2.32, is known to work, but the
-version from GNU binutils 2.26 must be avoided.  Recent versions of the
-Solaris assembler in '/usr/ccs/bin/as' work almost as well, though.
+The versions included in Solaris 11.3, from GNU binutils 2.23.1 or newer
+(available as '/usr/bin/gas' and '/usr/gnu/bin/as'), work fine.  The
+current version, from GNU binutils 2.34, is known to work.  Recent
+versions of the Solaris assembler in '/usr/bin/as' work almost as well,
+though.
 
-   For linking, the Solaris linker, is preferred.  If you want to use
-the GNU linker instead, the version in Solaris 11, from GNU binutils
-2.19 or newer (also in '/usr/gnu/bin/ld' and '/usr/bin/gld'), works, as
-does the latest version, from GNU binutils 2.32.
+   For linking, the Solaris linker is preferred.  If you want to use the
+GNU linker instead, the version in Solaris 11.3, from GNU binutils
+2.23.1 or newer (in '/usr/gnu/bin/ld' and '/usr/bin/gld'), works, as
+does the latest version, from GNU binutils 2.34.
 
    To use GNU 'as', configure with the options '--with-gnu-as
 --with-as=/usr/gnu/bin/as'.  It may be necessary to configure with
-'--without-gnu-ld --with-ld=/usr/ccs/bin/ld' to guarantee use of Sun
+'--without-gnu-ld --with-ld=/usr/ccs/bin/ld' to guarantee use of Solaris
 'ld'.
 
 ia64-*-linux
@@ -3777,14 +3819,13 @@ Support for Solaris 10 has been removed in GCC 10.  Support for Solaris
 9 has been removed in GCC 5.  Support for Solaris 8 has been removed in
 GCC 4.8.  Support for Solaris 7 has been removed in GCC 4.6.
 
-   Solaris 11 provides GCC 4.5.2, 4.7.3, and 4.8.2 as
-'/usr/gcc/4.5/bin/gcc' or similar.  Alternatively, you can install a
-pre-built GCC to bootstrap and install GCC. See the binaries page for
-details.
+   Solaris 11.3 provides GCC 4.5.2, 4.7.3, and 4.8.2 as
+'/usr/gcc/4.5/bin/gcc' or similar.  Newer Solaris versions provide one
+or more of GCC 5, 7, and 9.  Alternatively, you can install a pre-built
+GCC to bootstrap and install GCC. See the binaries page for details.
 
-   The Solaris 2 '/bin/sh' will often fail to configure 'libstdc++-v3'or
-'boehm-gc'.  We therefore recommend using the following initial sequence
-of commands
+   The Solaris 2 '/bin/sh' will often fail to configure 'libstdc++-v3'.
+We therefore recommend using the following initial sequence of commands
 
      % CONFIG_SHELL=/bin/ksh
      % export CONFIG_SHELL
@@ -3800,21 +3841,21 @@ strongly recommend specifying an absolute path to invoke
 has been observed to cause trouble.  For example, the linker may hang
 indefinitely.  The fix is to remove '/usr/ucb' from your 'PATH'.
 
-   The build process works more smoothly with the legacy Sun tools so,
-if you have '/usr/xpg4/bin' in your 'PATH', we recommend that you place
-'/usr/bin' before '/usr/xpg4/bin' for the duration of the build.
+   The build process works more smoothly with the legacy Solaris tools
+so, if you have '/usr/xpg4/bin' in your 'PATH', we recommend that you
+place '/usr/bin' before '/usr/xpg4/bin' for the duration of the build.
 
    We recommend the use of the Solaris assembler or the GNU assembler,
 in conjunction with the Solaris linker.  The GNU 'as' versions included
-in Solaris 11, from GNU binutils 2.19 or newer (also in '/usr/bin/gas'
+in Solaris 11.3, from GNU binutils 2.23.1 or newer (in '/usr/bin/gas'
 and '/usr/gnu/bin/as'), are known to work.  The current version, from
-GNU binutils 2.32, is known to work as well.  Note that your mileage may
+GNU binutils 2.34, is known to work as well.  Note that your mileage may
 vary if you use a combination of the GNU tools and the Solaris tools:
-while the combination GNU 'as' + Sun 'ld' should reasonably work, the
-reverse combination Sun 'as' + GNU 'ld' may fail to build or cause
-memory corruption at runtime in some cases for C++ programs.  GNU 'ld'
-usually works as well.  Again, the current version (2.32) is known to
-work, but generally lacks platform specific features, so better stay
+while the combination GNU 'as' + Solaris 'ld' should reasonably work,
+the reverse combination Solaris 'as' + GNU 'ld' may fail to build or
+cause memory corruption at runtime in some cases for C++ programs.  GNU
+'ld' usually works as well.  Again, the current version (2.34) is known
+to work, but generally lacks platform specific features, so better stay
 with Solaris 'ld'.  To use the LTO linker plugin ('-fuse-linker-plugin')
 with GNU 'ld', GNU binutils _must_ be configured with
 '--enable-largefile'.
@@ -3824,6 +3865,18 @@ you need to have any version of GNU 'c++filt', which is part of GNU
 binutils.  'libstdc++' symbol versioning will be disabled if no
 appropriate version is found.  Solaris 'c++filt' from the Solaris Studio
 compilers does _not_ work.
+
+   The versions of the GNU Multiple Precision Library (GMP), the MPFR
+library and the MPC library bundled with Solaris 11.3 and later are
+usually recent enough to match GCC's requirements.  There are two
+caveats:
+
+   * While the version of the GMP library in Solaris 11.3 works with
+     GCC, you need to configure with
+     '--with-gmp-include=/usr/include/gmp'.
+
+   * The version of the MPFR libary included in Solaris 11.3 is too old;
+     you need to provide a more recent one.
 
 sparc*-*-*
 ==========
@@ -3842,7 +3895,7 @@ sparc-sun-solaris2*
 ===================
 
 When GCC is configured to use GNU binutils 2.14 or later, the binaries
-produced are smaller than the ones produced using Sun's native tools;
+produced are smaller than the ones produced using Solaris native tools;
 this difference is quite significant for binaries containing debugging
 information.
 
@@ -3858,9 +3911,9 @@ library or the MPC library on a Solaris 7 or later system, the canonical
 target triplet must be specified as the 'build' parameter on the
 configure line.  This target triplet can be obtained by invoking
 './config.guess' in the toplevel source directory of GCC (and not that
-of GMP or MPFR or MPC). For example on a Solaris 9 system:
+of GMP or MPFR or MPC). For example on a Solaris 11 system:
 
-     % ./configure --build=sparc-sun-solaris2.9 --prefix=xxx
+     % ./configure --build=sparc-sun-solaris2.11 --prefix=xxx
 
 sparc-*-linux*
 ==============
@@ -3868,12 +3921,19 @@ sparc-*-linux*
 sparc64-*-solaris2*
 ===================
 
-When configuring the GNU Multiple Precision Library (GMP), the MPFR
+When configuring a 64-bit-default GCC on Solaris/SPARC, you must use a
+build compiler that generates 64-bit code, either by default or by
+specifying 'CC='gcc -m64' CXX='gcc-m64'' to 'configure'.  Additionally,
+you _must_ pass '--build=sparc64-sun-solaris2.11' or
+'--build=sparcv9-sun-solaris2.11' because 'config.guess' misdetects this
+situation, which can cause build failures.
+
+   When configuring the GNU Multiple Precision Library (GMP), the MPFR
 library or the MPC library, the canonical target triplet must be
 specified as the 'build' parameter on the configure line.  For example
-on a Solaris 9 system:
+on a Solaris 11 system:
 
-     % ./configure --build=sparc64-sun-solaris2.9 --prefix=xxx
+     % ./configure --build=sparc64-sun-solaris2.11 --prefix=xxx
 
 sparcv9-*-solaris2*
 ===================
@@ -3960,7 +4020,7 @@ x86-64 code with the '-m64' switch.  Since GCC 4.7, there is also a
 configuration that defaults to 64-bit code, but can generate 32-bit code
 with '-m32'.  To configure and build this way, you have to provide all
 support libraries like 'libgmp' as 64-bit code, configure with
-'--target=x86_64-pc-solaris2.1x' and 'CC=gcc -m64'.
+'--target=x86_64-pc-solaris2.11' and 'CC=gcc -m64'.
 
 xtensa*-*-elf
 =============
@@ -4755,7 +4815,7 @@ Concept Index
 * Menu:
 
 * Binaries:                              Binaries.           (line    6)
-* build_configargs:                      Configuration.      (line 1686)
+* build_configargs:                      Configuration.      (line 1699)
 * Configuration:                         Configuration.      (line    6)
 * configurations supported by GCC:       Configurations.     (line    6)
 * Downloading GCC:                       Downloading the source.
@@ -4765,7 +4825,7 @@ Concept Index
 * FDL, GNU Free Documentation License:   GNU Free Documentation License.
                                                              (line    6)
 * Host specific installation:            Specific.           (line    6)
-* host_configargs:                       Configuration.      (line 1690)
+* host_configargs:                       Configuration.      (line 1703)
 * Installing GCC: Binaries:              Binaries.           (line    6)
 * Installing GCC: Building:              Building.           (line    6)
 * Installing GCC: Configuration:         Configuration.      (line    6)
@@ -4775,7 +4835,7 @@ Concept Index
 * Specific installation notes:           Specific.           (line    6)
 * Target specific installation:          Specific.           (line    6)
 * Target specific installation notes:    Specific.           (line    6)
-* target_configargs:                     Configuration.      (line 1694)
+* target_configargs:                     Configuration.      (line 1707)
 * Testing:                               Testing.            (line    6)
 * Testsuite:                             Testing.            (line    6)
 
@@ -4786,103 +4846,103 @@ Node: Top1696
 Node: Installing GCC2254
 Node: Prerequisites3888
 Ref: GNAT-prerequisite5875
-Node: Downloading the source15535
-Node: Configuration17206
-Ref: with-gnu-as32837
-Ref: with-as33732
-Ref: with-gnu-ld35145
-Ref: WithAixSoname57815
-Ref: AixLdCommand58476
-Node: Building98368
-Node: Testing114099
-Node: Final install121986
-Node: Binaries127286
-Node: Specific128412
-Ref: aarch64-x-x128919
-Ref: alpha-x-x130939
-Ref: amd64-x-solaris2131153
-Ref: amdgcn-x-amdhsa131235
-Ref: arc-x-elf32131761
-Ref: arc-linux-uclibc131937
-Ref: arm-x-eabi132078
-Ref: avr132331
-Ref: bfin132912
-Ref: cr16133175
-Ref: cris133591
-Ref: dos134289
-Ref: epiphany-x-elf134612
-Ref: x-x-freebsd134717
-Ref: ft32-x-elf136517
-Ref: h8300-hms136615
-Ref: hppa-hp-hpux136967
-Ref: hppa-hp-hpux10139339
-Ref: hppa-hp-hpux11139752
-Ref: x-x-linux-gnu145154
-Ref: ix86-x-linux145347
-Ref: ix86-x-solaris2145660
-Ref: ia64-x-linux146792
-Ref: ia64-x-hpux147562
-Ref: x-ibm-aix148117
-Ref: TransferAixShobj151779
-Ref: iq2000-x-elf155589
-Ref: lm32-x-elf155729
-Ref: lm32-x-uclinux155833
-Ref: m32c-x-elf155961
-Ref: m32r-x-elf156063
-Ref: m68k-x-x156165
-Ref: m68k-x-uclinux157203
-Ref: microblaze-x-elf157448
-Ref: mips-x-x157567
-Ref: moxie-x-elf159477
-Ref: msp430-x-elf159524
-Ref: nds32le-x-elf160081
-Ref: nds32be-x-elf160153
-Ref: nvptx-x-none160222
-Ref: or1k-x-elf160785
-Ref: or1k-x-linux160916
-Ref: powerpc-x-x160997
-Ref: powerpc-x-darwin161188
-Ref: powerpc-x-elf161682
-Ref: powerpc-x-linux-gnu161767
-Ref: powerpc-x-netbsd161862
-Ref: powerpc-x-eabisim161950
-Ref: powerpc-x-eabi162076
-Ref: powerpcle-x-elf162152
-Ref: powerpcle-x-eabisim162244
-Ref: powerpcle-x-eabi162377
-Ref: rl78-x-elf162460
-Ref: riscv32-x-elf162566
-Ref: riscv32-x-linux162755
-Ref: riscv64-x-elf162912
-Ref: riscv64-x-linux163101
-Ref: rx-x-elf163258
-Ref: s390-x-linux163304
-Ref: s390x-x-linux163376
-Ref: s390x-ibm-tpf163463
-Ref: x-x-solaris2163594
-Ref: sparc-x-x166155
-Ref: sparc-sun-solaris2166657
-Ref: sparc-x-linux167796
-Ref: sparc64-x-solaris2167827
-Ref: sparcv9-x-solaris2168160
-Ref: c6x-x-x168247
-Ref: tilegx-*-linux168339
-Ref: tilegxbe-*-linux168481
-Ref: tilepro-*-linux168624
-Ref: visium-x-elf168745
-Ref: x-x-vxworks168853
-Ref: x86-64-x-x170376
-Ref: x86-64-x-solaris2170704
-Ref: xtensa-x-elf171354
-Ref: xtensa-x-linux172025
-Ref: windows172366
-Ref: x-x-cygwin174207
-Ref: x-x-mingw32174760
-Ref: older174986
-Ref: elf177103
-Node: Old177361
-Node: Configurations180494
-Node: GNU Free Documentation License184032
-Node: Concept Index209160
+Node: Downloading the source15487
+Node: Configuration17158
+Ref: with-gnu-as33246
+Ref: with-as34141
+Ref: with-gnu-ld35550
+Ref: WithAixSoname58220
+Ref: AixLdCommand58881
+Node: Building100312
+Node: Testing116043
+Node: Final install123930
+Node: Binaries129230
+Node: Specific130337
+Ref: aarch64-x-x130844
+Ref: alpha-x-x132864
+Ref: amd64-x-solaris2133078
+Ref: amdgcn-x-amdhsa133160
+Ref: arc-x-elf32133686
+Ref: arc-linux-uclibc133862
+Ref: arm-x-eabi134003
+Ref: avr134256
+Ref: bfin134837
+Ref: cr16135100
+Ref: cris135516
+Ref: dos136214
+Ref: epiphany-x-elf136537
+Ref: x-x-freebsd136642
+Ref: ft32-x-elf138442
+Ref: h8300-hms138540
+Ref: hppa-hp-hpux138892
+Ref: hppa-hp-hpux10141264
+Ref: hppa-hp-hpux11141677
+Ref: x-x-linux-gnu147079
+Ref: ix86-x-linux147272
+Ref: ix86-x-solaris2147585
+Ref: ia64-x-linux148661
+Ref: ia64-x-hpux149431
+Ref: x-ibm-aix149986
+Ref: TransferAixShobj153648
+Ref: iq2000-x-elf157458
+Ref: lm32-x-elf157598
+Ref: lm32-x-uclinux157702
+Ref: m32c-x-elf157830
+Ref: m32r-x-elf157932
+Ref: m68k-x-x158034
+Ref: m68k-x-uclinux159072
+Ref: microblaze-x-elf159317
+Ref: mips-x-x159436
+Ref: moxie-x-elf161346
+Ref: msp430-x-elf161393
+Ref: nds32le-x-elf161950
+Ref: nds32be-x-elf162022
+Ref: nvptx-x-none162091
+Ref: or1k-x-elf162654
+Ref: or1k-x-linux162785
+Ref: powerpc-x-x162866
+Ref: powerpc-x-darwin163057
+Ref: powerpc-x-elf163551
+Ref: powerpc-x-linux-gnu163636
+Ref: powerpc-x-netbsd163731
+Ref: powerpc-x-eabisim163819
+Ref: powerpc-x-eabi163945
+Ref: powerpcle-x-elf164021
+Ref: powerpcle-x-eabisim164113
+Ref: powerpcle-x-eabi164246
+Ref: rl78-x-elf164329
+Ref: riscv32-x-elf164435
+Ref: riscv32-x-linux164624
+Ref: riscv64-x-elf164781
+Ref: riscv64-x-linux164970
+Ref: rx-x-elf165127
+Ref: s390-x-linux165173
+Ref: s390x-x-linux165245
+Ref: s390x-ibm-tpf165332
+Ref: x-x-solaris2165463
+Ref: sparc-x-x168570
+Ref: sparc-sun-solaris2169072
+Ref: sparc-x-linux170215
+Ref: sparc64-x-solaris2170246
+Ref: sparcv9-x-solaris2170964
+Ref: c6x-x-x171051
+Ref: tilegx-*-linux171143
+Ref: tilegxbe-*-linux171285
+Ref: tilepro-*-linux171428
+Ref: visium-x-elf171549
+Ref: x-x-vxworks171657
+Ref: x86-64-x-x173180
+Ref: x86-64-x-solaris2173508
+Ref: xtensa-x-elf174158
+Ref: xtensa-x-linux174829
+Ref: windows175170
+Ref: x-x-cygwin177011
+Ref: x-x-mingw32177564
+Ref: older177790
+Ref: elf179907
+Node: Old180165
+Node: Configurations183298
+Node: GNU Free Documentation License186836
+Node: Concept Index211964
 
 End Tag Table

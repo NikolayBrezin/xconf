@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GCC 1"
-.TH GCC 1 "2020-04-17" "gcc-10.0.1" "GNU"
+.TH GCC 1 "2020-05-07" "gcc-11.0.0" "GNU"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -593,8 +593,8 @@ in the following sections.
 \&\fB\-dD  \-dI  \-dM  \-dN  \-dU 
 \&\-fdebug\-cpp  \-fdirectives\-only  \-fdollars\-in\-identifiers  
 \&\-fexec\-charset=\fR\fIcharset\fR  \fB\-fextended\-identifiers  
-\&\-finput\-charset=\fR\fIcharset\fR  \fB\-fmacro\-prefix\-map=\fR\fIold\fR\fB=\fR\fInew\fR  
-\&\fB\-fmax\-include\-depth=\fR\fIdepth\fR 
+\&\-finput\-charset=\fR\fIcharset\fR  \fB\-flarge\-source\-files  
+\&\-fmacro\-prefix\-map=\fR\fIold\fR\fB=\fR\fInew\fR \fB\-fmax\-include\-depth=\fR\fIdepth\fR 
 \&\fB\-fno\-canonical\-system\-headers  \-fpch\-deps  \-fpch\-preprocess  
 \&\-fpreprocessed  \-ftabstop=\fR\fIwidth\fR  \fB\-ftrack\-macro\-expansion  
 \&\-fwide\-exec\-charset=\fR\fIcharset\fR  \fB\-fworking\-directory 
@@ -1353,7 +1353,7 @@ See \s-1RS/6000\s0 and PowerPC Options.
 \&\-mshstk \-mmanual\-endbr \-mforce\-indirect\-call  \-mavx512vbmi2 \-mavx512bf16 \-menqcmd 
 \&\-mvpclmulqdq  \-mavx512bitalg  \-mmovdiri  \-mmovdir64b  \-mavx512vpopcntdq 
 \&\-mavx5124fmaps  \-mavx512vnni  \-mavx5124vnniw  \-mprfchw  \-mrdpid 
-\&\-mrdseed  \-msgx \-mavx512vp2intersect
+\&\-mrdseed  \-msgx \-mavx512vp2intersect \-mserialize \-mtsxldtrk
 \&\-mcldemote  \-mms\-bitfields  \-mno\-align\-stringops  \-minline\-all\-stringops 
 \&\-minline\-stringops\-dynamically  \-mstringop\-strategy=\fR\fIalg\fR 
 \&\fB\-mmemcpy\-strategy=\fR\fIstrategy\fR  \fB\-mmemset\-strategy=\fR\fIstrategy\fR 
@@ -7635,7 +7635,6 @@ Enabling this option effectively enables the following warnings:
 \&\-Wanalyzer\-tainted\-array\-index 
 \&\-Wanalyzer\-unsafe\-call\-within\-signal\-handler 
 \&\-Wanalyzer\-use\-after\-free 
-\&\-Wanalyzer\-use\-of\-uninitialized\-value 
 \&\-Wanalyzer\-use\-of\-pointer\-in\-stale\-stack\-frame\fR
 .Sp
 This option is only available if \s-1GCC\s0 was configured with analyzer
@@ -7774,13 +7773,6 @@ to disable it.
 .Sp
 This diagnostic warns for paths through the code in which a pointer
 is dereferenced that points to a variable in a stale stack frame.
-.IP "\fB\-Wno\-analyzer\-use\-of\-uninitialized\-value\fR" 4
-.IX Item "-Wno-analyzer-use-of-uninitialized-value"
-This warning requires \fB\-fanalyzer\fR, which enables it; use
-\&\fB\-Wno\-analyzer\-use\-of\-uninitialized\-value\fR to disable it.
-.Sp
-This diagnostic warns for paths through the code in which an uninitialized
-value is used.
 .PP
 Pertinent parameters for controlling the exploration are:
 \&\fB\-\-param analyzer\-bb\-explosion\-factor=\fR\fIvalue\fR,
@@ -8516,14 +8508,15 @@ by \fB\-O2\fR and also turns on the following optimization flags:
 \&\-floop\-unroll\-and\-jam 
 \&\-fpeel\-loops 
 \&\-fpredictive\-commoning 
+\&\-fsplit\-loops 
 \&\-fsplit\-paths 
-\&\-ftree\-loop\-distribute\-patterns 
 \&\-ftree\-loop\-distribution 
 \&\-ftree\-loop\-vectorize 
 \&\-ftree\-partial\-pre 
 \&\-ftree\-slp\-vectorize 
 \&\-funswitch\-loops 
 \&\-fvect\-cost\-model 
+\&\-fvect\-cost\-model=dynamic 
 \&\-fversion\-loops\-for\-strides\fR
 .IP "\fB\-O0\fR" 4
 .IX Item "-O0"
@@ -13099,6 +13092,8 @@ If \f(CW\*(C`N=0\*(C'\fR, no pad location is recorded.
 .Sp
 The \s-1NOP\s0 instructions are inserted at\-\-\-and maybe before, depending on
 \&\fIM\fR\-\-\-the function entry address, even before the prologue.
+.Sp
+The maximum value of \fIN\fR and \fIM\fR is 65535.
 .SS "Options Controlling the Preprocessor"
 .IX Subsection "Options Controlling the Preprocessor"
 These options control the C preprocessor, which is run on each C source
@@ -13602,6 +13597,20 @@ This option may be useful in conjunction with the \fB\-B\fR or
 \&\fB\-wrapper\fR options to specify an alternate preprocessor or
 perform additional processing of the program source between
 normal preprocessing and compilation.
+.IP "\fB\-flarge\-source\-files\fR" 4
+.IX Item "-flarge-source-files"
+Adjust \s-1GCC\s0 to expect large source files, at the expense of slower
+compilation and higher memory usage.
+.Sp
+Specifically, \s-1GCC\s0 normally tracks both column numbers and line numbers
+within source files and it normally prints both of these numbers in
+diagnostics.  However, once it has processed a certain number of source
+lines, it stops tracking column numbers and only tracks line numbers.
+This means that diagnostics for later lines do not include column numbers.
+It also means that options like \fB\-Wmisleading\-indentation\fR cease to work
+at that point, although the compiler prints a note if this happens.
+Passing \fB\-flarge\-source\-files\fR significantly increases the number
+of source lines that \s-1GCC\s0 can process before it stops tracking columns.
 .SS "Passing Options to the Assembler"
 .IX Subsection "Passing Options to the Assembler"
 You can pass options to the assembler.
@@ -16055,7 +16064,9 @@ dynamically linked.  This is the default code model.
 .IP "\fB\-mcmodel=large\fR" 4
 .IX Item "-mcmodel=large"
 Generate code for the large code model.  This makes no assumptions about
-addresses and sizes of sections.  Programs can be statically linked only.
+addresses and sizes of sections.  Programs can be statically linked only.  The
+\&\fB\-mcmodel=large\fR option is incompatible with \fB\-mabi=ilp32\fR,
+\&\fB\-fpic\fR and \fB\-fPIC\fR.
 .IP "\fB\-mstrict\-align\fR" 4
 .IX Item "-mstrict-align"
 .PD 0
@@ -16201,6 +16212,7 @@ instruction set.  If using a later revision, e.g. \fB\-march=armv8.1\-a\fR
 or \fB\-march=armv8\-a+lse\fR, the ARMv8.1\-Atomics instructions will be
 used directly.  The same applies when using \fB\-mcpu=\fR when the
 selected cpu supports the \fBlse\fR feature.
+This option is on by default.
 .IP "\fB\-march=\fR\fIname\fR" 4
 .IX Item "-march=name"
 Specify the name of the target architecture and, optionally, one or
@@ -16264,7 +16276,7 @@ performance of the code.  Permissible values for this option are:
 \&\fBocteontx2f95mm\fR
 \&\fBthunderx\fR, \fBthunderxt88\fR,
 \&\fBthunderxt88p1\fR, \fBthunderxt81\fR, \fBtsv110\fR,
-\&\fBthunderxt83\fR, \fBthunderx2t99\fR,
+\&\fBthunderxt83\fR, \fBthunderx2t99\fR, \fBthunderx3t110\fR,
 \&\fBcortex\-a57.cortex\-a53\fR, \fBcortex\-a72.cortex\-a53\fR,
 \&\fBcortex\-a73.cortex\-a35\fR, \fBcortex\-a73.cortex\-a53\fR,
 \&\fBcortex\-a75.cortex\-a55\fR, \fBcortex\-a76.cortex\-a55\fR
@@ -18055,7 +18067,7 @@ Permissible names are: \fBarm7tdmi\fR, \fBarm7tdmi\-s\fR, \fBarm710t\fR,
 \&\fBcortex\-r5\fR, \fBcortex\-r7\fR, \fBcortex\-r8\fR, \fBcortex\-r52\fR,
 \&\fBcortex\-m0\fR, \fBcortex\-m0plus\fR, \fBcortex\-m1\fR, \fBcortex\-m3\fR,
 \&\fBcortex\-m4\fR, \fBcortex\-m7\fR, \fBcortex\-m23\fR, \fBcortex\-m33\fR,
-\&\fBcortex\-m35p\fR,
+\&\fBcortex\-m35p\fR, \fBcortex\-m55\fR,
 \&\fBcortex\-m1.small\-multiply\fR, \fBcortex\-m0.small\-multiply\fR,
 \&\fBcortex\-m0plus.small\-multiply\fR, \fBexynos\-m1\fR, \fBmarvell\-pj4\fR,
 \&\fBneoverse\-n1\fR, \fBxscale\fR, \fBiwmmxt\fR, \fBiwmmxt2\fR,
@@ -28340,6 +28352,8 @@ preferred alignment to \fB\-mpreferred\-stack\-boundary=2\fR.
 .IX Item "-mmovdir64b"
 .IP "\fB\-menqcmd\fR" 4
 .IX Item "-menqcmd"
+.IP "\fB\-mtsxldtrk\fR" 4
+.IX Item "-mtsxldtrk"
 .IP "\fB\-mavx512vpopcntdq\fR" 4
 .IX Item "-mavx512vpopcntdq"
 .IP "\fB\-mavx512vp2intersect\fR" 4
@@ -28352,6 +28366,8 @@ preferred alignment to \fB\-mpreferred\-stack\-boundary=2\fR.
 .IX Item "-mavx5124vnniw"
 .IP "\fB\-mcldemote\fR" 4
 .IX Item "-mcldemote"
+.IP "\fB\-mserialize\fR" 4
+.IX Item "-mserialize"
 .PD
 These switches enable the use of instructions in the \s-1MMX, SSE,
 SSE2, SSE3, SSSE3, SSE4, SSE4A, SSE4.1, SSE4.2, AVX, AVX2, AVX512F, AVX512PF,
@@ -28361,9 +28377,9 @@ WBNOINVD, FMA4, PREFETCHW, RDPID, PREFETCHWT1, RDSEED, SGX, XOP, LWP,\s0
 3DNow!, enhanced 3DNow!, \s-1POPCNT, ABM, ADX, BMI, BMI2, LZCNT, FXSR, XSAVE,
 XSAVEOPT, XSAVEC, XSAVES, RTM, HLE, TBM, MWAITX, CLZERO, PKU, AVX512VBMI2,
 GFNI, VAES, WAITPKG, VPCLMULQDQ, AVX512BITALG, MOVDIRI, MOVDIR64B, AVX512BF16,
-ENQCMD, AVX512VPOPCNTDQ, AVX5124FMAPS, AVX512VNNI, AVX5124VNNIW,\s0 or \s-1CLDEMOTE\s0
-extended instruction sets.  Each has a corresponding \fB\-mno\-\fR option to
-disable use of these instructions.
+ENQCMD, AVX512VPOPCNTDQ, AVX5124FMAPS, AVX512VNNI, AVX5124VNNIW, SERIALIZE\s0
+or \s-1CLDEMOTE\s0 extended instruction sets.  Each has a corresponding
+\&\fB\-mno\-\fR option to disable use of these instructions.
 .Sp
 These extensions are also available as built-in functions: see
 \&\fBx86 Built-in Functions\fR, for details of the functions enabled and
@@ -28962,9 +28978,9 @@ Note that \fB\-mcmodel=large\fR is incompatible with
 \&\fB\-mindirect\-branch=thunk\-extern\fR since the thunk function may
 not be reachable in the large code model.
 .Sp
-Note that \fB\-mindirect\-branch=thunk\-extern\fR is incompatible with
-\&\fB\-fcf\-protection=branch\fR since the external thunk cannot be modified
-to disable control-flow check.
+Note that \fB\-mindirect\-branch=thunk\-extern\fR is compatible with
+\&\fB\-fcf\-protection=branch\fR since the external thunk can be made
+to enable control-flow check.
 .IP "\fB\-mfunction\-return=\fR\fIchoice\fR" 4
 .IX Item "-mfunction-return=choice"
 Convert function return with \fIchoice\fR.  The default is \fBkeep\fR,
@@ -28974,6 +28990,10 @@ return to inlined call and return thunk.  \fBthunk-extern\fR converts
 function return to external call and return thunk provided in a separate
 object file.  You can control this behavior for a specific function by
 using the function attribute \f(CW\*(C`function_return\*(C'\fR.
+.Sp
+Note that \fB\-mindirect\-return=thunk\-extern\fR is compatible with
+\&\fB\-fcf\-protection=branch\fR since the external thunk can be made
+to enable control-flow check.
 .Sp
 Note that \fB\-mcmodel=large\fR is incompatible with
 \&\fB\-mfunction\-return=thunk\fR and

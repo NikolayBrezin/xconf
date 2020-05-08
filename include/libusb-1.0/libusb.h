@@ -1365,7 +1365,7 @@ int LIBUSB_CALL libusb_get_config_descriptor_by_value(libusb_device *dev,
 void LIBUSB_CALL libusb_free_config_descriptor(
 	struct libusb_config_descriptor *config);
 int LIBUSB_CALL libusb_get_ss_endpoint_companion_descriptor(
-	struct libusb_context *ctx,
+	libusb_context *ctx,
 	const struct libusb_endpoint_descriptor *endpoint,
 	struct libusb_ss_endpoint_companion_descriptor **ep_comp);
 void LIBUSB_CALL libusb_free_ss_endpoint_companion_descriptor(
@@ -1374,18 +1374,18 @@ int LIBUSB_CALL libusb_get_bos_descriptor(libusb_device_handle *dev_handle,
 	struct libusb_bos_descriptor **bos);
 void LIBUSB_CALL libusb_free_bos_descriptor(struct libusb_bos_descriptor *bos);
 int LIBUSB_CALL libusb_get_usb_2_0_extension_descriptor(
-	struct libusb_context *ctx,
+	libusb_context *ctx,
 	struct libusb_bos_dev_capability_descriptor *dev_cap,
 	struct libusb_usb_2_0_extension_descriptor **usb_2_0_extension);
 void LIBUSB_CALL libusb_free_usb_2_0_extension_descriptor(
 	struct libusb_usb_2_0_extension_descriptor *usb_2_0_extension);
 int LIBUSB_CALL libusb_get_ss_usb_device_capability_descriptor(
-	struct libusb_context *ctx,
+	libusb_context *ctx,
 	struct libusb_bos_dev_capability_descriptor *dev_cap,
 	struct libusb_ss_usb_device_capability_descriptor **ss_usb_device_cap);
 void LIBUSB_CALL libusb_free_ss_usb_device_capability_descriptor(
 	struct libusb_ss_usb_device_capability_descriptor *ss_usb_device_cap);
-int LIBUSB_CALL libusb_get_container_id_descriptor(struct libusb_context *ctx,
+int LIBUSB_CALL libusb_get_container_id_descriptor(libusb_context *ctx,
 	struct libusb_bos_dev_capability_descriptor *dev_cap,
 	struct libusb_container_id_descriptor **container_id);
 void LIBUSB_CALL libusb_free_container_id_descriptor(
@@ -1478,7 +1478,7 @@ static inline unsigned char *libusb_control_transfer_get_data(
 static inline struct libusb_control_setup *libusb_control_transfer_get_setup(
 	struct libusb_transfer *transfer)
 {
-	return (struct libusb_control_setup *)(void *) transfer->buffer;
+	return (struct libusb_control_setup *)(void *)transfer->buffer;
 }
 
 /** \ingroup libusb_asyncio
@@ -1508,7 +1508,7 @@ static inline void libusb_fill_control_setup(unsigned char *buffer,
 	uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
 	uint16_t wLength)
 {
-	struct libusb_control_setup *setup = (struct libusb_control_setup *)(void *) buffer;
+	struct libusb_control_setup *setup = (struct libusb_control_setup *)(void *)buffer;
 	setup->bmRequestType = bmRequestType;
 	setup->bRequest = bRequest;
 	setup->wValue = libusb_cpu_to_le16(wValue);
@@ -1558,7 +1558,7 @@ static inline void libusb_fill_control_transfer(
 	unsigned char *buffer, libusb_transfer_cb_fn callback, void *user_data,
 	unsigned int timeout)
 {
-	struct libusb_control_setup *setup = (struct libusb_control_setup *)(void *) buffer;
+	struct libusb_control_setup *setup = (struct libusb_control_setup *)(void *)buffer;
 	transfer->dev_handle = dev_handle;
 	transfer->endpoint = 0;
 	transfer->type = LIBUSB_TRANSFER_TYPE_CONTROL;
@@ -1924,29 +1924,30 @@ typedef int libusb_hotplug_callback_handle;
  *
  * Since version 1.0.16, \ref LIBUSB_API_VERSION >= 0x01000102
  *
- * Flags for hotplug events */
+ * Hotplug events */
 typedef enum {
-	/** Default value when not using any flags. */
-	LIBUSB_HOTPLUG_NO_FLAGS = 0U,
+	/** A device has been plugged in and is ready to use */
+	LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED = (1 << 0),
 
-	/** Arm the callback and fire it for all matching currently attached devices. */
-	LIBUSB_HOTPLUG_ENUMERATE = (1U << 0)
-} libusb_hotplug_flag;
+	/** A device has left and is no longer available.
+	 * It is the user's responsibility to call libusb_close on any handle associated with a disconnected device.
+	 * It is safe to call libusb_get_device_descriptor on a device that has left */
+	LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT = (1 << 1)
+} libusb_hotplug_event;
 
 /** \ingroup libusb_hotplug
  *
  * Since version 1.0.16, \ref LIBUSB_API_VERSION >= 0x01000102
  *
- * Hotplug events */
+ * Hotplug flags */
 typedef enum {
-	/** A device has been plugged in and is ready to use */
-	LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED = (1U << 0),
+	/** Arm the callback and fire it for all matching currently attached devices. */
+	LIBUSB_HOTPLUG_ENUMERATE = (1 << 0)
+} libusb_hotplug_flag;
 
-	/** A device has left and is no longer available.
-	 * It is the user's responsibility to call libusb_close on any handle associated with a disconnected device.
-	 * It is safe to call libusb_get_device_descriptor on a device that has left */
-	LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT = (1U << 1)
-} libusb_hotplug_event;
+/** \ingroup libusb_hotplug
+ * Convenience macro when not using any flags */
+#define LIBUSB_HOTPLUG_NO_FLAGS 0
 
 /** \ingroup libusb_hotplug
  * Wildcard matching for hotplug events */
@@ -2000,9 +2001,10 @@ typedef int (LIBUSB_CALL *libusb_hotplug_callback_fn)(libusb_context *ctx,
  * Since version 1.0.16, \ref LIBUSB_API_VERSION >= 0x01000102
  *
  * \param[in] ctx context to register this callback with
- * \param[in] events bitwise or of events that will trigger this callback. See \ref
- *            libusb_hotplug_event
- * \param[in] flags hotplug callback flags. See \ref libusb_hotplug_flag
+ * \param[in] events bitwise or of hotplug events that will trigger this callback.
+ *            See \ref libusb_hotplug_event
+ * \param[in] flags bitwise or of hotplug flags that affect registration.
+ *            See \ref libusb_hotplug_flag
  * \param[in] vendor_id the vendor id to match or \ref LIBUSB_HOTPLUG_MATCH_ANY
  * \param[in] product_id the product id to match or \ref LIBUSB_HOTPLUG_MATCH_ANY
  * \param[in] dev_class the device class to match or \ref LIBUSB_HOTPLUG_MATCH_ANY
@@ -2012,7 +2014,7 @@ typedef int (LIBUSB_CALL *libusb_hotplug_callback_fn)(libusb_context *ctx,
  * \returns LIBUSB_SUCCESS on success LIBUSB_ERROR code on failure
  */
 int LIBUSB_CALL libusb_hotplug_register_callback(libusb_context *ctx,
-	libusb_hotplug_event events, libusb_hotplug_flag flags,
+	int events, int flags,
 	int vendor_id, int product_id, int dev_class,
 	libusb_hotplug_callback_fn cb_fn, void *user_data,
 	libusb_hotplug_callback_handle *callback_handle);
@@ -2039,7 +2041,7 @@ void LIBUSB_CALL libusb_hotplug_deregister_callback(libusb_context *ctx,
  * \param[in] ctx context this callback is registered with
  * \param[in] callback_handle the handle of the callback to get the user_data of
  */
-void * LIBUSB_CALL libusb_hotplug_get_user_data(struct libusb_context *ctx,
+void * LIBUSB_CALL libusb_hotplug_get_user_data(libusb_context *ctx,
 	libusb_hotplug_callback_handle callback_handle);
 
 /** \ingroup libusb_lib
